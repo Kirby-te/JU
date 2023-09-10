@@ -21,7 +21,7 @@ public:
         this->balance = balance;
     }
 
-    string getName() {
+    string getName() const {
         return name;
     }
 
