@@ -7,8 +7,8 @@ using namespace std;
 class Account {
     static int nextAccNo;
     int accountNumber;
-    string name;
-    double balance;
+    mutable string name;
+    mutable double balance;
     const double minBalance = 1000;
     const double interestRate = .043;
 
@@ -29,7 +29,7 @@ public:
         return balance;
     }
 
-    double withdraw(double const amt) {
+    double withdraw(double const amt) const {
         if(balance - amt < minBalance) {
             cout << "insufficient balance." << endl;
             return -1;
@@ -39,7 +39,7 @@ public:
         return wd;
     }
 
-    double deposit(double const amt) {
+    double deposit(double const amt) const {
         if(amt < 0) {
             cout << "Negative deposit not supported." << endl;
             return balance;
@@ -49,7 +49,7 @@ public:
         return balance;
     }
 
-    double calculateInterest() {
+    double calculateInterest() const {
         double interest = balance * interestRate;
         balance += interest;
         return interest;
