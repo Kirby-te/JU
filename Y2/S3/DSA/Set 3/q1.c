@@ -79,14 +79,16 @@ int main() {
                     break;
                 }
 
-                int* arr = (int*)malloc((n)*sizeof(int));
-
+                int* arr = (int*)malloc((2*n+1)*sizeof(int));
+                int j = 0;
                 printf("Enter the level order traversal of the binary tree:\n");
-                for (int i = 0; i < n; i++) {
-                    scanf("%d", &arr[i]);
+                for (int i = 0; i < n;) {
+                    scanf("%d", &arr[j]);
+                    if(arr[j++] != -1) i++;
                 }
 
-                root = createTree(arr, 0, n);
+                root = createTree(arr, 0, j);
+                break;
             case 2:
                 printf("In-order Traversal: ");
                 inOrderTraversal(root);
