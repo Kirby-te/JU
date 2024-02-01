@@ -10,7 +10,7 @@
         (i) create two complex numbers 3+2i and 4-2i
         (ii) print the sum and product of those numbers.
 */
-package q5;
+package q5_2;
 
 class Complex {
     private int real;
@@ -44,7 +44,28 @@ class Complex {
     }
 
     public void display() {
-        System.out.print(this.real + " + (" + this.imaginary + ")i");
+	if(real != 0) {
+		if(imaginary > 0)
+			System.out.print(real + " + " + imaginary + "i");
+		else if(imaginary == 0)
+			System.out.print(real);
+		else
+			System.out.print(real + " - " + imaginary * (-1) + "i");
+	}
+        else if(real == 0) {
+                if(imaginary == 0)
+                        System.out.print(real);
+                else
+                        System.out.print(imaginary + "i");
+	}
+	else {
+                if(imaginary > 0)
+                        System.out.print(real + " + " + imaginary + "i");
+                else if(imaginary == 0)
+                        System.out.print(real);
+                else
+                        System.out.print(real + " - " + imaginary * (-1) + "i");
+	}
     }
 }
 

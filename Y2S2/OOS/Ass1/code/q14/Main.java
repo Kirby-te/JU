@@ -57,11 +57,12 @@ class Circle implements Shape {
     }
 
     public void printDetails() {
-        System.out.println("Circle Details:");
+        System.out.println("\nCircle Details:");
         System.out.println("Radius: " + radius);
         System.out.println("Center X: " + centerX);
         System.out.println("Center Y: " + centerY);
         System.out.println("Area: " + area());
+        System.out.println();
     }
 }
 
@@ -101,12 +102,13 @@ class Rectangle implements Shape {
     }
 
     public void printDetails() {
-        System.out.println("Rectangle Details:");
+        System.out.println("\nRectangle Details:");
         System.out.println("Width: " + width);
         System.out.println("Height: " + height);
         System.out.println("Top Left X: " + centerX);
         System.out.println("Top Left Y: " + centerY);
         System.out.println("Area: " + area());
+        System.out.println();
     }
 }
 

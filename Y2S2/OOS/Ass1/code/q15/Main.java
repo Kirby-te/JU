@@ -78,11 +78,11 @@ public class Main {
         TollBooth tb = new TollBooth(c1);
         tb.printDetails();
 
-        Integer[] c2 = {0, 1, 1, 0, 1};
-        for (Integer car : c2) {
-            tb.addCar(car);
-        }
+        // Integer[] c2 = {0, 1, 1, 0, 1};
+        // for (Integer car : c2) {
+        //     tb.addCar(car);
+        // }
 
-        tb.printDetails();
+        //tb.printDetails();
     }
 }
