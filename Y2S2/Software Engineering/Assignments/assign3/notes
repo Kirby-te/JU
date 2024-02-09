@@ -1,0 +1,9 @@
+finish (fin): Continue running until just after function in the selected stack frame returns. 
+
+continue (c): continues the execution of program that is currently being debugged
+
+run (r): kills current program (if any) and starts a new instance of it
+
+break (b): breakpoint is like a stop sign in your code, whenever gdb gets to a breakpoint it halts execution of your program and allows you to examine it.
+            "(gdb) break [filename]:[linenumber]"
+            (gdb) break main.cpp:42
