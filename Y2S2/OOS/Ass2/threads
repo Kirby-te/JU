@@ -1,0 +1,10 @@
+Thread
+  A thread is a lightweight sub-process, the smallest unit of processing.
+
+Multitasking
+  Multitasking is a process of executing multiple tasks simultaneously. We use multitasking to utilize the CPU. Multitasking can be achieved in two ways:
+  
+  1. Process-based Multitasking (Multiprocessing)
+       * each process allocates a separate memory area
+  2. Thread-based Multitasking (Multithreading)
+       * share the same address space
