@@ -9,3 +9,4 @@
     * Inter-Thread Communication
 
 * It's done using locks or monitor
+* wait() -> notify() notifyAll()
