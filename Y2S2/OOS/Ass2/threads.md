@@ -54,3 +54,21 @@
     public void interrupt(): interrupts the thread.
     public boolean isInterrupted(): tests if the thread has been interrupted.
     public static boolean interrupted(): tests if the current thread has been interrupted.
+
+## Thread Scheduler
+
+* A component of Java that decides which thread to run or execute and which thread to wait is called a thread scheduler in Java.
+* There are two factors for scheduling a thread
+    * Priority: Priority of each thread lies between 1 to 10. If a thread has a higher priority, it means that thread has got a better chance of getting picked up by the thread scheduler.
+    * Time of Arrival: Suppose two threads of the same priority enter the runnable state, then priority cannot be the factor to pick a thread from these two threads. Then, A thread that arrived first gets the preference over the other threads.
+      
+    ### Thread Scheduler Algorithms
+  * First Come First Serve Scheduling:
+      * queue
+      * may lead to stervation
+  * Time-slicing scheduling:
+      * gets a slice of time, in CPU
+  * Preemptive-Priority Scheduling:
+      * queue based on priority
+      * limited time
+
