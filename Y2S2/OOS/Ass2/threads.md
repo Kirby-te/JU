@@ -1,10 +1,11 @@
-
-## Thread
+# Thread
 
 * A thread is a lightweight sub-process, the smallest unit of processing.
 
 ## Multitasking
+
 * Multitasking is a process of executing multiple tasks simultaneously. We use multitasking to utilize the CPU. Multitasking can be achieved in two ways:
+
 1. Process-based Multitasking (Multiprocessing)
      * each process allocates a separate memory area
 2. Thread-based Multitasking (Multithreading)
@@ -13,23 +14,24 @@
 ## Thread States
 
 ![image](https://github.com/HJ4263/JU/assets/143291338/75fe2b2a-1609-4333-b965-4d46986a6259)
- 
-  * New: 
-  * Active: start()
-    * Runnable
-      * threads lie for thier slice of time to get run in the CPU
-    * Running
-      * run for a pre-determined time
-  * Blocked / Waiting
-    * a thread is insctive for a span of time
-    * in this state it doesn't consume any cycle of CPU
-    * when main thread invokes join() method it goes into waiting for the child threads to finish
-  * Timed Waiting
-    * waitng for leads to stervation
-    * sleep()
-  * Terminated
 
-## Commonly used methods of Thread class:
+* New:
+* Active: start()
+  * Runnable
+    * threads lie for thier slice of time to get run in the CPU
+  * Running
+    * run for a pre-determined time
+* Blocked / Waiting
+  * a thread is insctive for a span of time
+  * in this state it doesn't consume any cycle of CPU
+  * when main thread invokes join() method it goes into waiting for the child threads to finish
+* Timed Waiting
+  * waitng for leads to stervation
+  * sleep()
+* Terminated
+
+## Commonly used methods of Thread class
+
     public void run(): is used to perform action for a thread.
     public void start(): starts the execution of the thread.JVM calls the run() method on the thread.
     public void sleep(long miliseconds): Causes the currently executing thread to sleep (temporarily cease execution) for the specified number of milliseconds.
@@ -52,5 +54,3 @@
     public void interrupt(): interrupts the thread.
     public boolean isInterrupted(): tests if the thread has been interrupted.
     public static boolean interrupted(): tests if the current thread has been interrupted.
-
-
