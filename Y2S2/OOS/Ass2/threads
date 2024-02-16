@@ -8,3 +8,12 @@ Multitasking
        * each process allocates a separate memory area
   2. Thread-based Multitasking (Multithreading)
        * share the same address space
+
+Thread States
+  New: 
+  Active: start()
+  	Runnable
+
+  Blocked / Waiting
+  Timed Waiting
+  Terminated
