@@ -2,10 +2,10 @@
 
 * Synchronization means coordination between multiple processes/threads.  
 
-* Types-
+* Types:
   * Process synchronization
   * Thread synchronization
     * Mutual Exclusive
     * Inter-Thread Communication
 
-it's done using locks or monitor
+* It's done using locks or monitor
