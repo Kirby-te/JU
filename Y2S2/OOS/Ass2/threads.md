@@ -72,3 +72,5 @@
       * queue based on priority
       * limited time
 
+![image](https://github.com/HJ4263/JU/assets/143291338/f8678427-48e5-445f-8948-3e17fec9b703)
+
