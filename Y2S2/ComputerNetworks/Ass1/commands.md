@@ -67,7 +67,11 @@ telnet [options] [remote_server_address] [port]
 * interactive + noninteractive mode
 * default port 53
 
+## netstat
 
+* for network statics
+* displays which ports are open or hav eestablished connections
+* 
 
 
 
