@@ -1,5 +1,7 @@
 # Linux Commnads
 
+* -type=[soa, txt, any]
+
 ## Ifconfig
 
 * <specific_network_interface_name>: like eth0, eno1, eno2 Displays details about it
@@ -59,8 +61,11 @@
 telnet [options] [remote_server_address] [port]
 ```
 
-      
+## nslookup
 
+* to query internet doamin name servers
+* interactive + noninteractive mode
+* default port 53
 
 
 
