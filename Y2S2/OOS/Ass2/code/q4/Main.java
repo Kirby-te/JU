@@ -39,7 +39,7 @@ public class Main {
                         try {
                             while((i = fin.read()) != -1) {
                                 currentNumber = 0;
-                                currentNumberSign = 1;
+                                currentNumberSign = 1;// assume positive
                                 if(i == 45) {
                                     currentNumberSign = -1;// negetive number
                                     i = fin.read();
