@@ -8,6 +8,7 @@
 
 package q4;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -29,8 +30,8 @@ public class Main {
         return i - 48;
     }
 
-    public static void main(String[] args) {
-        try (FileReader fin = new FileReader(".\\q4\\input.txt")) {
+    public static void main(String[] args) { 
+        try (FileReader fin = new FileReader("./q4/input.txt")) {
             isFileOpen = true;
             Thread producer = new Thread() {
                 public void run() {
