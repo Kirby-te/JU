@@ -35,7 +35,7 @@ public class Main {
             public void run() {
                 synchronized (lock) {
                     for(int i=0; i<n; i++) {
-                        while (currentDenominator == 0) {
+                        while(currentDenominator == 0) {
                             try { lock.wait(); } catch(Exception e) {}
                         }
                         result += 1.0 / currentDenominator;
