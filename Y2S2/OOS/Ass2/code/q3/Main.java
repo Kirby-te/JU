@@ -35,6 +35,7 @@ public class Main {
             public void run() {
                 synchronized (lock) {
                     for(int i=0; i<n; i++) {
+                        currentDenominator = factorial(i);
                         result += 1.0 / currentDenominator;
                         lock.notify();
                         try { if(i < n - 1) lock.wait(); } catch(Exception e) {}
