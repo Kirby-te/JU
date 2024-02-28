@@ -2,7 +2,7 @@
  * following parallel binary search algorithm for series a1, a2...an sorted in increasing order such that n mod 10 = 0
  * Element to be searched is e
  *  a) Create n/10 threads t1, t2,..,tn/10
- *  b) Distribute the numbers among threads such that ti will have numbers ai, ai+1, ....a2i-1
+ *  b) Distribute the numbers among threads such that ti will have numbers (ai, ai+1, ....a2i-1) -> a((i-1)*10+1)...a((i-1)*10+10)
  *  c) Distribute the element e to all threads
  *  d) Each thread searches the element e in its sub-array using binary search algorithm
 */
@@ -33,7 +33,7 @@ public class Search {
 
     public static int[] searchElementUsingThreads(int[] arr, int target) {
         n = arr.length;
-        numberOfThread = (n / 10) + (n % 10);
+        numberOfThread = (n%10 == 0) ? n/10 : n/10 + 1;
         threads = new Thread[numberOfThread];
         currentThreadIndex = 0;
 
@@ -46,6 +46,7 @@ public class Search {
                     if(index != -1) {
                         threadIndexOfElement = currentThreadIndex + 1;
                         arrayIndexOfTarget = currentThreadIndex * 10 + index + 1;
+                        index = -1;
                     }
                 }
             };

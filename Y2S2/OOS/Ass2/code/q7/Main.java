@@ -9,7 +9,8 @@ import q6.Search;
 
 public class Main {
     public static void main(String[] args) {
-        int[] arr = new int[100];
+        int arrayLength = 100;
+        int[] arr = new int[arrayLength];
         int target = 12;
 
         for(int i=0; i<arr.length; i++) {
@@ -21,7 +22,9 @@ public class Main {
         if(answer[0] == -1) {
             System.err.println("Element not found!");
         } else {
-            System.out.println("Element fount at Thread Index: " + answer[0] + " Location: " + answer[1] + " element");
+            System.out.println("Element " + target + " found at:");
+            System.out.println("Thread Index: " + answer[0] + " out of "  + " Threads");
+            System.out.println("Location: " + answer[1] + " element out of " + arrayLength + " Elements");
         }
     }
 }
