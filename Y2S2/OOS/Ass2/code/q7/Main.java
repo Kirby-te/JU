@@ -21,7 +21,9 @@ public class Main {
         if(answer[0] == -1) {
             System.err.println("Element not found!");
         } else {
-            System.out.println("Element fount at Thread Index: " + answer[0] + " Location: " + answer[1] + " element");
+            System.out.println("Element " + target + " found at:");
+            System.out.println("Thread Index: " + answer[0] + " out of " + arrayLength/10 + " Threads");
+            System.out.println("Location: " + answer[1] + " element out of " + arrayLength + " Elements");
         }
     }
 }
