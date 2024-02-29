@@ -10,19 +10,28 @@
 package q6;
 
 public class Search {
-    private static int n;
-    private static int numberOfThread;
-    private static Thread[] threads;
-    private static int threadIndexOfElement = -1;
-    private static int arrayIndexOfTarget = -1;
-    private static int currentThreadIndex;
+    private int[] array;
+    private int target;
+    private int numberOfThread;
+    private int threadIndexOfTarget = -1;
+    private int arrayIndexOfTarget = -1;
 
-    private static int binarySearch(int[] arr, int startIndex, int endIndex, int target) {
+    public Search(int[] arr, int target) {
+        this.array = arr;
+        this.target = target;
+        numberOfThread = (array.length%10 == 0) ? array.length/10 : array.length/10 + 1;
+    }
+
+    public int getNumberOfThread() {
+        return numberOfThread;
+    }
+
+    private int binarySearch(int startIndex, int endIndex) {
         while(startIndex <= endIndex) {
-            int midIndex = startIndex + (endIndex - startIndex) / 2;
-            if(target < arr[midIndex]) {
+            int midIndex = (endIndex + startIndex) / 2;
+            if(target < array[midIndex]) {
                 endIndex = midIndex - 1;
-            } else if(target > arr[midIndex]) {
+            } else if(target > array[midIndex]) {
                 startIndex = midIndex + 1;
             } else {
                 return midIndex;
@@ -31,41 +40,29 @@ public class Search {
         return -1;
     }
 
-    public static int[] searchElementUsingThreads(int[] arr, int target) {
-        n = arr.length;
-        numberOfThread = (n%10 == 0) ? n/10 : n/10 + 1;
-        threads = new Thread[numberOfThread];
-        currentThreadIndex = 0;
+    private int i;
+    public int[] searchElementUsingThreads() {
+        Thread[] threads = new Thread[numberOfThread];
 
-        while(currentThreadIndex < numberOfThread) {
-            int startIndex = (currentThreadIndex)*10;
-            int endIndex = Math.min((currentThreadIndex+1)*10 - 1, n - 1);
-            threads[currentThreadIndex] = new Thread() {
-                public void run() {
-                    int index = binarySearch(arr, startIndex, endIndex, target);
-                    if(index != -1) {
-                        threadIndexOfElement = currentThreadIndex + 1;
-                        arrayIndexOfTarget = currentThreadIndex * 10 + index + 1;
-                        index = -1;
+        for(i=0; i<numberOfThread; i++) {
+            int startIndex = i * 10;
+            int endIndex = Math.min(startIndex + 9, array.length - 1);
+            threads[i] = new Thread(() -> {
+                int index = binarySearch(startIndex, endIndex);
+                if (index != -1) {
+                    if(threadIndexOfTarget == -1) {
+                        threadIndexOfTarget = i + 1;
+                        arrayIndexOfTarget = index + 1;
                     }
                 }
-            };
-            currentThreadIndex++;
-        }
-
-        for(int i=0; i<numberOfThread; i++) {
-            threads[i].run();
-        }
-
-        try {
-            for(int i=0; i<numberOfThread; i++) {
+            });
+            threads[i].start();
+            try {
                 threads[i].join();
             }
-        }
-        catch (InterruptedException e) {
-            System.out.println(e);
+            catch (InterruptedException e) { System.out.println(e); }
         }
 
-        return new int[] {threadIndexOfElement, arrayIndexOfTarget};// if not found: {-1, -1} 
+        return new int[]{threadIndexOfTarget, arrayIndexOfTarget}; // If not found: {-1, -1}
     }
 }
