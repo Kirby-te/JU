@@ -10,7 +10,7 @@ public class Product {
      * for productId the identifierIndex = 0
      * for productname the identfierIndex = 1 
     */
-    public boolean isAvailable(String productDetail, int identifierIndex) {
+    public static boolean isAvailable(String productDetail, int identifierIndex) {
         try(BufferedReader br = new BufferedReader(new FileReader("./database/inventory.csv"))) {
             String line;
             while((line = br.readLine()) != null) {
@@ -30,7 +30,7 @@ public class Product {
         return false;
     }
 
-    public double getCost(String productDetail, int identifierIndex) {
+    public static double getCost(String productDetail, int identifierIndex) {
         try(BufferedReader br = new BufferedReader(new FileReader("./database/inventory.csv"))) {
             String line;
             while((line = br.readLine()) != null) {
@@ -50,7 +50,7 @@ public class Product {
         return -1.0;
     }
 
-    public int availableQuantity(String productDetail, int identifierIndex) {
+    public static int availableQuantity(String productDetail, int identifierIndex) {
         try(BufferedReader br = new BufferedReader(new FileReader("./database/inventory.csv"))) {
             String line;
             while((line = br.readLine()) != null) {
