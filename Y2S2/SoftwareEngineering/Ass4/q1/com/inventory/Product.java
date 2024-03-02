@@ -6,16 +6,17 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Product {
+    private static final String filePath = "./database/inventory.csv";
     /*
      * for productId the identifierIndex = 0
      * for productname the identfierIndex = 1 
     */
-    public static boolean isAvailable(String productDetail, int identifierIndex) {
-        try(BufferedReader br = new BufferedReader(new FileReader("./database/inventory.csv"))) {
+    public static boolean isAvailable(String productIdentifier, int identifierIndex) {
+        try(BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while((line = br.readLine()) != null) {
                 String[] products = line.split(", ");
-                if(productDetail.equals(products[identifierIndex])) {
+                if(productIdentifier.equals(products[identifierIndex])) {
                     return true;
                 }
             }
@@ -30,12 +31,12 @@ public class Product {
         return false;
     }
 
-    public static double getCost(String productDetail, int identifierIndex) {
-        try(BufferedReader br = new BufferedReader(new FileReader("./database/inventory.csv"))) {
+    public static double getCost(String productIdentifier, int identifierIndex) {
+        try(BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while((line = br.readLine()) != null) {
                 String[] products = line.split(", ");
-                if(productDetail.equals(products[identifierIndex])) {
+                if(productIdentifier.equals(products[identifierIndex])) {
                     return Double.parseDouble(products[2]);
                 }
             }
@@ -50,12 +51,12 @@ public class Product {
         return -1.0;
     }
 
-    public static int availableQuantity(String productDetail, int identifierIndex) {
-        try(BufferedReader br = new BufferedReader(new FileReader("./database/inventory.csv"))) {
+    public static int getQuantity(String productIdentifier, int identifierIndex) {
+        try(BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while((line = br.readLine()) != null) {
                 String[] products = line.split(", ");
-                if(productDetail.equals(products[identifierIndex])) {
+                if(productIdentifier.equals(products[identifierIndex])) {
                     return Integer.parseInt(products[3]);
                 }
             }
