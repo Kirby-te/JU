@@ -16,7 +16,8 @@ public class Product {
             br.readLine(); // skip the header-line
             String line;
             while((line = br.readLine()) != null) {
-                lines.add(line);
+                if (!line.isBlank())
+                    lines.add(line);
             }
         }
         catch(FileNotFoundException e) {
