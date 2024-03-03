@@ -6,29 +6,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Product {
     private static final String filePath = "./database/inventory.csv";
-
-    private static List<String> readProducts() {
-        List<String> lines = new ArrayList<>();
-        try(BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            br.readLine(); // skip the header-line
-            String line;
-            while((line = br.readLine()) != null) {
-                lines.add(line);
-            }
-        }
-        catch(FileNotFoundException e) {
-            System.out.println("Need inventory database.");
-        }
-        catch(IOException e) {
-            System.out.println(e);
-        }
-        return lines;
-    }
 
     private static void writeProducts(List<String> lines) {
         try(PrintWriter pw = new PrintWriter(new FileWriter(filePath, true))) {
@@ -90,8 +71,7 @@ public class Product {
             return;
         }
         
-
-        List<String> lines = readProducts();
+        List<String> lines = com.inventory.Product.readProducts();
         lines.removeIf(line -> (line.split(", ")[identifierIndex].equals(productIdentifier)));
         writeProducts(lines);
         System.out.println("Product removed.");
@@ -103,7 +83,7 @@ public class Product {
             return;
         }
 
-        List<String> lines = readProducts();
+        List<String> lines = com.inventory.Product.readProducts();
         for(int i = 0; i < lines.size(); i++) {
             String[] products = lines.get(i).split(", ");
             if(productIdentifier.equals(products[identifierIndex])) {
@@ -122,7 +102,7 @@ public class Product {
             return;
         }
 
-        List<String> lines = readProducts();
+        List<String> lines = com.inventory.Product.readProducts();
         for(int i = 0; i < lines.size(); i++) {
             String[] products = lines.get(i).split(", ");
             if(productIdentifier.equals(products[identifierIndex])) {
@@ -141,7 +121,7 @@ public class Product {
             return;
         }
 
-        List<String> lines = readProducts();
+        List<String> lines = com.inventory.Product.readProducts();
         for(int i = 0; i < lines.size(); i++) {
             String[] products = lines.get(i).split(", ");
             if(productIdentifier.equals(products[identifierIndex])) {
@@ -162,7 +142,7 @@ public class Product {
             return;
         }
         
-        List<String> lines = readProducts();
+        List<String> lines = com.inventory.Product.readProducts();
         for(int i = 0; i < lines.size(); i++) {
             String[] products = lines.get(i).split(", ");
             if(productIdentifier.equals(products[identifierIndex])) {
