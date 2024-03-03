@@ -74,7 +74,7 @@ public class Product {
             int nextProductId = getNextProductId();
             String[] newProduct = {String.valueOf(nextProductId), productName, String.valueOf(cost), String.valueOf(quantity)};
             
-            // pw.append(String.join(", ", newProduct));
+            pw.append(String.join(", ", newProduct));
             pw.close();
 
             System.out.println("New product added.");
