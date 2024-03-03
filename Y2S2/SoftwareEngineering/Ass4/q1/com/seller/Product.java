@@ -31,7 +31,7 @@ public class Product {
     }
 
     private static void writeProducts(List<String> lines) {
-        try(PrintWriter pw = new PrintWriter(new FileWriter(filePath))) {
+        try(PrintWriter pw = new PrintWriter(new FileWriter(filePath, true))) {
             pw.println("product_id, product_name, cost_per_item, quantity");// header
             for (String line : lines) {
                 pw.println(line);
@@ -70,11 +70,11 @@ public class Product {
             return;
         }
 
-        try(PrintWriter pw = new PrintWriter(new FileWriter(filePath));) {
+        try(PrintWriter pw = new PrintWriter(new FileWriter(filePath, true));) {
             int nextProductId = getNextProductId();
             String[] newProduct = {String.valueOf(nextProductId), productName, String.valueOf(cost), String.valueOf(quantity)};
             
-            pw.print(String.join(", ", newProduct));
+            // pw.append(String.join(", ", newProduct));
             pw.close();
 
             System.out.println("New product added.");
@@ -89,6 +89,7 @@ public class Product {
             System.out.println("Product does not exist.");
             return;
         }
+        
 
         List<String> lines = readProducts();
         lines.removeIf(line -> (line.split(", ")[identifierIndex].equals(productIdentifier)));
