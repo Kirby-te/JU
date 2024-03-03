@@ -11,8 +11,12 @@ import java.util.List;
 public class Product {
     private static final String filePath = "./database/inventory.csv";
 
+    /*
+     * creating new file every-time with neccesry modifications
+     * using this to change certain produxt value
+    */
     private static void writeProducts(List<String> lines) {
-        try(PrintWriter pw = new PrintWriter(new FileWriter(filePath, true))) {
+        try(PrintWriter pw = new PrintWriter(new FileWriter(filePath))) {
             pw.println("product_id, product_name, cost_per_item, quantity");// header
             for (String line : lines) {
                 pw.println(line);
@@ -25,22 +29,15 @@ public class Product {
 
     public static int getNextProductId() {
         int nextProductId = 0;
-        try(BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String lastline;
-            br.readLine(); // skip the header-line
-            while((lastline = br.readLine()) != null) {
-                String[] product = lastline.split(", ");
-                int val = Integer.parseInt(product[0]);
-                if(val > nextProductId) {
-                    nextProductId = val;
-                }
+        int currentProductId = 0;
+
+        List<String> products = com.inventory.Product.readProducts();
+        for (String product : products) {
+            String[] productDetails = product.split(", ");
+            currentProductId = Integer.parseInt(productDetails[0]);
+            if (currentProductId > nextProductId) {
+                nextProductId = currentProductId;
             }
-        }
-        catch(FileNotFoundException e) {
-            System.out.println("Need inventory database.");
-        }
-        catch(IOException e) {
-            System.out.println(e);
         }
         return nextProductId + 1;
     }
@@ -55,7 +52,7 @@ public class Product {
             int nextProductId = getNextProductId();
             String[] newProduct = {String.valueOf(nextProductId), productName, String.valueOf(cost), String.valueOf(quantity)};
             
-            pw.append(String.join(", ", newProduct));
+            pw.print("\n" + String.join(", ", newProduct));
             pw.close();
 
             System.out.println("New product added.");
@@ -115,7 +112,7 @@ public class Product {
         System.out.println("Quantity modified.");
     }
 
-    public static void addItems(String productIdentifier, int identifierIndex, double supply) {
+    public static void addItems(String productIdentifier, int identifierIndex, int supply) {
         if(!com.inventory.Product.isAvailable(productIdentifier, identifierIndex)) {
             System.out.println("Product does not exist.");
             return;
@@ -125,7 +122,7 @@ public class Product {
         for(int i = 0; i < lines.size(); i++) {
             String[] products = lines.get(i).split(", ");
             if(productIdentifier.equals(products[identifierIndex])) {
-                double prevVal = Double.parseDouble(products[3]);
+                int prevVal = Integer.parseInt(products[3]);
                 prevVal += supply;
                 products[3] = String.valueOf(prevVal);
                 lines.set(i, String.join(", ", products));
@@ -136,7 +133,7 @@ public class Product {
         System.out.println("Items added.");
     }
 
-    public static void removeItems(String productIdentifier, int identifierIndex, double demand) {
+    public static void removeItems(String productIdentifier, int identifierIndex, int demand) {
         if(!com.inventory.Product.isAvailable(productIdentifier, identifierIndex)) {
             System.out.println("Product does not exist.");
             return;
@@ -146,7 +143,7 @@ public class Product {
         for(int i = 0; i < lines.size(); i++) {
             String[] products = lines.get(i).split(", ");
             if(productIdentifier.equals(products[identifierIndex])) {
-                double prevVal = Double.parseDouble(products[3]);
+                int prevVal = Integer.parseInt(products[3]);
                 if(prevVal < demand) {
                     System.out.println("Not enough items.\n Request Canceled.");
                     return;
