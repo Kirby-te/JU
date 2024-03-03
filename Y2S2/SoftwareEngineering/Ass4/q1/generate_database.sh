@@ -32,7 +32,7 @@ generate_customer() {
 }
 
 generate_purchase_history() {
-    echo "customer_id, product_id, purchase_status, purchase_quantity, purchase_cost"
+    echo "customer_id, product_id, purchase_status, purchase_quantity, purchase_cost, date_and_time"
 }
 
 if [ ! -f ./database/inventory.csv ]; then

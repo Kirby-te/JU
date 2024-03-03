@@ -1,1 +1,1 @@
-customer_id, product_id, purchase_status, purchase_quantity, purchase_cost
+customer_id, product_id, purchase_status, purchase_quantity, purchase_cost, date_and_time
