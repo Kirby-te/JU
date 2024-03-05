@@ -9,24 +9,25 @@ public class Login {
     private double total_spending;
 
     public Login(String customerName, Double balance) {
-        if(CustomerData.isAvailable(customerName)) {
+        if(RetriveData.isAvailable(customerName)) {
             System.out.println("Customer already exists.");
             this.customerId =
-                    CustomerData.getCustomerId(customerName);
+                    RetriveData.getCustomerId(customerName);
             this.customerName = customerName;
             this.balance = 
-                    CustomerData.getBalance(this.customerId);   
+                    RetriveData.getBalance(this.customerId);   
             this.number_of_successful_purchases = 
-                    CustomerData.getSuccessfulPurchases(this.customerId);
+                    RetriveData.getSuccessfulPurchases(this.customerId);
             this.number_of_failed_purchases = 
-                    CustomerData.getFailedPurchases(this.customerId);
+                    RetriveData.getFailedPurchases(this.customerId);
             this.total_spending = 
-                    CustomerData.getTotalSpendings(this.customerId);
+                    RetriveData.getTotalSpendings(this.customerId);
         }
         else {
-            this.customerId = CustomerData.getNextCustomerId();
+            this.customerId = RetriveData.getNextCustomerId();
             this.customerName = customerName;
-            CustomerCSV.addCustomer(this);
+            this.balance = balance;
+            UploadData.addCustomer(this);
         }
     }
 

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerData {
+public class RetriveData {
     private static final String customerFile = "./database/customers.csv";
 
     public static List<String> readCustomerInfo() {
@@ -125,15 +125,5 @@ public class CustomerData {
             }
         }
         return String.valueOf(nextCustomerId + 1);
-    }
-
-    public static void printCustomerProfile(String customerId) {
-        System.out.println("\tCustomerId" + "\tSuccessful Purchases" + "\tFailed Puchases" + "\tTotal Spendings");
-        System.out.println("\t" + customerId +
-                           "\t" + getName(customerId) +
-                           "\t" + getBalance(customerId) +
-                           "\t" + getSuccessfulPurchases(customerId) + 
-                           "\t" + getFailedPurchases(customerId) + 
-                           "\t" + getTotalSpendings(customerId));
     }
 }
