@@ -1,2 +1,2 @@
-customer_id,number_of_successful_purchases,number_of_failed_purchases,total_spending
-10, 10, 0, 0.0
+customer_id, customer_name, balance, number_of_successful_purchases, number_of_failed_purchases, total_spending
+1, Jack, 105, 2, 1, 56

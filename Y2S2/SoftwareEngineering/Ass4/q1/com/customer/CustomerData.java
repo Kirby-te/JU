@@ -40,12 +40,24 @@ public class CustomerData {
         return false;
     }
 
-    public static double getTotalSpendings(String customerId) {
+    public static String getName(String customerId) {
         List<String> lines = readCustomerInfo();
         for (String line : lines) {
             String[] customer = line.split(", ");
             if(customerId.equals(customer[0])) {
-                return Double.parseDouble(customer[3]);
+                return customer[1];
+            }
+        }
+        System.out.println("Customer does not exist.");
+        return null;
+    }
+
+    public static double getBalance(String customerId) {
+        List<String> lines = readCustomerInfo();
+        for (String line : lines) {
+            String[] customer = line.split(", ");
+            if(customerId.equals(customer[0])) {
+                return Double.parseDouble(customer[2]);
             }
         }
         System.out.println("Customer does not exist.");
@@ -57,7 +69,7 @@ public class CustomerData {
         for (String line : lines) {
             String[] customer = line.split(", ");
             if(customerId.equals(customer[0])) {
-                return Integer.parseInt(customer[1]);
+                return Integer.parseInt(customer[3]);
             }
         }
         System.out.println("Customer does not exist.");
@@ -69,7 +81,19 @@ public class CustomerData {
         for (String line : lines) {
             String[] customer = line.split(", ");
             if(customerId.equals(customer[0])) {
-                return Integer.parseInt(customer[2]);
+                return Integer.parseInt(customer[4]);
+            }
+        }
+        System.out.println("Customer does not exist.");
+        return 0;
+    }
+
+    public static double getTotalSpendings(String customerId) {
+        List<String> lines = readCustomerInfo();
+        for (String line : lines) {
+            String[] customer = line.split(", ");
+            if(customerId.equals(customer[0])) {
+                return Double.parseDouble(customer[5]);
             }
         }
         System.out.println("Customer does not exist.");
@@ -89,5 +113,15 @@ public class CustomerData {
             }
         }
         return nextCustomerId + 1;
+    }
+
+    public static void printCustomerProfile(String customerId) {
+        System.out.println("\tCustomerId" + "\tSuccessful Purchases" + "\tFailed Puchases" + "\tTotal Spendings");
+        System.out.println("\t" + customerId +
+                           "\t" + getName(customerId) +
+                           "\t" + getBalance(customerId) +
+                           "\t" + getSuccessfulPurchases(customerId) + 
+                           "\t" + getFailedPurchases(customerId) + 
+                           "\t" + getTotalSpendings(customerId));
     }
 }

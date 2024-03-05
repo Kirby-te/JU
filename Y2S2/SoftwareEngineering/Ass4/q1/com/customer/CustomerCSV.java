@@ -11,6 +11,8 @@ public class CustomerCSV {
         try(PrintWriter pw = new PrintWriter(new FileWriter(customerFile, true));) {
             String[] newCustomer = {
                 details.getCustomerID(), 
+                details.getCustomerName(),
+                String.valueOf(details.getBalance()),
                 String.valueOf(details.getNumber_of_successful_purchases()), 
                 String.valueOf(details.getNumber_of_failed_purchases()), 
                 String.valueOf(details.getTotal_spending())

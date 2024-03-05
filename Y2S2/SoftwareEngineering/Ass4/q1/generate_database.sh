@@ -28,7 +28,7 @@ generate_inventory() {
 }
 
 generate_customer() {
-    echo "customer_id, number_of_successful_purchases, number_of_failed_purchases, total_spending"
+    echo "customer_id, customer_name, balance, number_of_successful_purchases, number_of_failed_purchases, total_spending"
 }
 
 generate_purchase_history() {
