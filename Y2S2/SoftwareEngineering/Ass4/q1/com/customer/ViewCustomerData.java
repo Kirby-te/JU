@@ -1,13 +1,27 @@
 package com.customer;
 
+import java.util.List;
+
 public class ViewCustomerData {
+    public static void printAllCustomerInfo() {
+        List<String> lines = RetriveCustomerData.readCustomerInfo();
+        for (String line : lines) {
+            String[] customer = line.split(", ");
+            System.out.println(customer[0] + "\t" + customer[1] + "\t" + 
+                               customer[2] + "\t" + customer[3] + "\t" +
+                               customer[4] + "\t" + customer[5]);
+        }
+    }
+
     public static void printCustomerProfile(String customerId) {
-        System.out.println("  CustomerId " + " Name " + " Balance " + " Successful Purchases " + " Failed Purchases " + " Total Spendings ");
-        System.out.println("\t" + customerId +
-                           "\t" + RetriveCustomerData.getName(customerId) +
-                           "\t" + RetriveCustomerData.getBalance(customerId) +
-                           "\t" + RetriveCustomerData.getSuccessfulPurchases(customerId) + 
-                           "\t" + RetriveCustomerData.getFailedPurchases(customerId) + 
-                           "\t" + RetriveCustomerData.getTotalSpendings(customerId));
+        List<String> lines = RetriveCustomerData.readCustomerInfo();
+        for (String line : lines) {
+            String[] customer = line.split(", ");
+            if(customerId.equals(customer[0])) {
+                System.out.println(customer[0] + "\t" + customer[1] + "\t" + 
+                                   customer[2] + "\t" + customer[3] + "\t" +
+                                   customer[4] + "\t" + customer[5]);
+            }
+        }
     }
 }

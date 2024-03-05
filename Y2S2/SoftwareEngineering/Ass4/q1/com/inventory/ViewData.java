@@ -1,26 +1,14 @@
 package com.inventory;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.util.List;
 
 public class ViewData {
-    private static final String filePath = "./database/inventory.csv";
-
     public static void print() {
-        try(BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while((line = br.readLine()) != null) {
-                System.out.println(line);
-            }
+        List<String> lines = RetriveData.readProducts();
+        for (String line : lines) {
+            String[] products = line.split(", ");
+            System.out.println(products[0] + "\t" + products[1] + "\t" + 
+                               products[2] + "\t" + products[3]);
         }
-        catch(FileNotFoundException e) {
-            System.out.println("Need inventory database.");
-        }
-        catch(IOException e) {
-            System.out.println(e);
-        }
-
     }
 }

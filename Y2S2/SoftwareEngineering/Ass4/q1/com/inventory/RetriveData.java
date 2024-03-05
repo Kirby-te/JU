@@ -44,6 +44,37 @@ public class RetriveData {
         return false;
     }
 
+    public static String getProductId(String productName, int identifierIndex) {
+        if (identifierIndex == 0) {
+            return productName;
+        }
+        List<String> lines = readProducts();
+        for (String product : lines) {
+            String[] products = product.split(", ");
+            if(productName.equals(products[1])) {
+                return products[0];
+            }
+        }
+        System.out.println("Product doesn't exist");
+        return null;
+    }
+
+    public static String getProductName(String productId, int identifierIndex) {
+        if (identifierIndex == 1) {
+            return productId;
+        }
+        
+        List<String> lines = readProducts();
+        for (String product : lines) {
+            String[] products = product.split(", ");
+            if(productId.equals(products[0])) {
+                return products[1];
+            }
+        }
+        System.out.println("Product doesn't exist");
+        return null;
+    }
+
     public static double getCost(String productIdentifier, int identifierIndex) {
         List<String> lines = readProducts();
         for (String product : lines) {
