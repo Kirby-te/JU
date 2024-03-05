@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RetriveData {
+public class RetriveCustomerData {
     private static final String customerFile = "./database/customers.csv";
 
     public static List<String> readCustomerInfo() {

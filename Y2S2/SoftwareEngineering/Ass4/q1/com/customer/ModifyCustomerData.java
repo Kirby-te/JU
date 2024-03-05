@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-public class ModifyData {
+public class ModifyCustomerData {
     private static final String customerFile = "./database/customers.csv";
 
     public static void writeCustomers(List<String> lines) {
@@ -21,7 +21,7 @@ public class ModifyData {
     }
 
     public static void addBalance(String customerId, Double credit) {
-        List<String> lines = RetriveData.readCustomerInfo();
+        List<String> lines = RetriveCustomerData.readCustomerInfo();
         for (int i=0; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
             if(customerId.equals(customer[0])) {
@@ -36,7 +36,7 @@ public class ModifyData {
     }
 
     public static void removeBalance(String customerId, Double debit) {
-        List<String> lines = RetriveData.readCustomerInfo();
+        List<String> lines = RetriveCustomerData.readCustomerInfo();
         for (int i=0; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
             if(customerId.equals(customer[0])) {
@@ -55,7 +55,7 @@ public class ModifyData {
     }
 
     public static void incrementSuccessfulPurchases(String customerId) {
-        List<String> lines = RetriveData.readCustomerInfo();
+        List<String> lines = RetriveCustomerData.readCustomerInfo();
         for (int i=0; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
             if(customerId.equals(customer[0])) {
@@ -70,7 +70,7 @@ public class ModifyData {
     }
 
     public static void incrementFailedPurchases(String customerId) {
-        List<String> lines = RetriveData.readCustomerInfo();
+        List<String> lines = RetriveCustomerData.readCustomerInfo();
         for (int i=0; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
             if(customerId.equals(customer[0])) {
@@ -85,7 +85,7 @@ public class ModifyData {
     }
 
     public static void modifySpendings(String customerId, Double cost) {
-        List<String> lines = RetriveData.readCustomerInfo();
+        List<String> lines = RetriveCustomerData.readCustomerInfo();
         for (int i=0; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
             if(customerId.equals(customer[0])) {

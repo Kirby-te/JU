@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class UploadData {
+public class UploadCustomerData {
     private static final String customerFile = "./database/customers.csv";
 
     public static void addCustomer(Login details) {
