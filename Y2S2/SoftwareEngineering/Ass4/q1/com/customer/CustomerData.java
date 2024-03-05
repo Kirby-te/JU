@@ -40,6 +40,18 @@ public class CustomerData {
         return false;
     }
 
+    public static String getCustomerId(String customerName) {
+        List<String> lines = readCustomerInfo();
+        for (String line : lines) {
+            String[] customer = line.split(", ");
+            if(customerName.equals(customer[1])) {
+                return customer[0];
+            }
+        }
+        System.out.println("Customer does not exist.");
+        return null;
+    }
+
     public static String getName(String customerId) {
         List<String> lines = readCustomerInfo();
         for (String line : lines) {
@@ -100,7 +112,7 @@ public class CustomerData {
         return 0;
     }
 
-    public static int getNextCustomerId() {
+    public static String getNextCustomerId() {
         int nextCustomerId = 0;
         int currentCustomerId = 0;
 
@@ -112,7 +124,7 @@ public class CustomerData {
                 nextCustomerId = currentCustomerId;
             }
         }
-        return nextCustomerId + 1;
+        return String.valueOf(nextCustomerId + 1);
     }
 
     public static void printCustomerProfile(String customerId) {

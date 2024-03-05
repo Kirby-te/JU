@@ -10,7 +10,7 @@ public class CustomerCSV {
     public static void addCustomer(Login details) {
         try(PrintWriter pw = new PrintWriter(new FileWriter(customerFile, true));) {
             String[] newCustomer = {
-                details.getCustomerID(), 
+                details.getCustomerId(),
                 details.getCustomerName(),
                 String.valueOf(details.getBalance()),
                 String.valueOf(details.getNumber_of_successful_purchases()), 
