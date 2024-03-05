@@ -24,26 +24,6 @@ public class ModifyProductData {
         }
     }
 
-    public static void addProduct(String productName, double cost, int quantity) {
-        if(com.inventory.RetriveData.isAvailable(productName, 1)) {
-            System.out.println("Product already exists.");
-            return;
-        }
-
-        try(PrintWriter pw = new PrintWriter(new FileWriter(filePath, true));) {
-            int nextProductId = RetriveProductData.getNextProductId();
-            String[] newProduct = {String.valueOf(nextProductId), productName, String.valueOf(cost), String.valueOf(quantity)};
-            
-            pw.print("\n" + String.join(", ", newProduct));
-            pw.close();
-
-            System.out.println("New product added.");
-        }
-        catch(IOException e) {
-            System.out.println(e);
-        }
-    }
-
     public static void removeProduct(String productIdentifier, int identifierIndex) {
         if(!com.inventory.RetriveData.isAvailable(productIdentifier, identifierIndex)) {
             System.out.println("Product does not exist.");
