@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Product {
+public class RetriveData {
     private static final String filePath = "./database/inventory.csv";
 
     public static List<String> readProducts() {

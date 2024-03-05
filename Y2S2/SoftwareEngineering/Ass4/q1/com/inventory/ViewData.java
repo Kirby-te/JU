@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class Details {
+public class ViewData {
     private static final String filePath = "./database/inventory.csv";
 
     public static void print() {
