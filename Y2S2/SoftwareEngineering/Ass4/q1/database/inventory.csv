@@ -1,11 +1,8 @@
 product_id, product_name, cost_per_item, quantity
-1, P1, 103, 85
-2, P2, 67, 42
-3, P3, 58, 54
-4, P4, 102, 1
-5, P5, 102, 78
-6, P6, 50, 3
-7, P7, 46, 56
-8, P8, 116, 70
-9, P9, 52, 66
-10, P10, 84, 5
+1, Beyblade, 55, 34
+2, Bubble Machine, 128, 67
+3, Slime, 100, 7
+4, VR Head Set, 121, 88
+5, Dino Watch, 103, 12
+6, Lego Death Star, 54, 86
+7, Death Ray, 512.0, 3
