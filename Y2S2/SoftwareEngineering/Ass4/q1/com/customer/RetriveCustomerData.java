@@ -29,11 +29,22 @@ public class RetriveCustomerData {
         return lines;
     }
 
-    public static boolean isAvailable(String customerId) {
+    public static boolean isAvailableId(String customerId) {
         List<String> lines = readCustomerInfo();
         for (String line : lines) {
             String[] customer = line.split(", ");
             if(customerId.equals(customer[0])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isAvailableName(String customerName) {
+        List<String> lines = readCustomerInfo();
+        for (String line : lines) {
+            String[] customer = line.split(", ");
+            if(customerName.equals(customer[1])) {
                 return true;
             }
         }

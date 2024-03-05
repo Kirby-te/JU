@@ -23,8 +23,6 @@ public class UploadSalesData {
             
             pw.print("\n" + String.join(", ", newPurchase));
             pw.close();
-
-            System.out.println("New Purchase added.");
         }
         catch(IOException e) {
             System.out.println(e);

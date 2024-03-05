@@ -107,7 +107,7 @@ public class ModifyProductData {
             if(productIdentifier.equals(products[identifierIndex])) {
                 int prevVal = Integer.parseInt(products[3]);
                 if(prevVal < demand) {
-                    System.out.println("Not enough items.\n Request Canceled.");
+                    System.out.println("Not enough items.\nRequest Canceled.");
                     return;
                 }
                 prevVal -= demand;

@@ -9,7 +9,7 @@ public class Login {
     private double total_spending;
 
     public Login(String customerName, Double balance) {
-        if(RetriveCustomerData.isAvailable(customerName)) {
+        if(RetriveCustomerData.isAvailableName(customerName)) {
             System.out.println("Customer already exists.");
             this.customerId =
                     RetriveCustomerData.getCustomerId(customerName);

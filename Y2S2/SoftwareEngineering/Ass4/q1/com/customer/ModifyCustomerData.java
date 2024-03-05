@@ -70,6 +70,10 @@ public class ModifyCustomerData {
     }
 
     public static void incrementFailedPurchases(String customerId) {
+        if (!RetriveCustomerData.isAvailableId(customerId)) {
+            System.out.println("Customer does not exist");
+            return;
+        }
         List<String> lines = RetriveCustomerData.readCustomerInfo();
         for (int i=0; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
@@ -81,10 +85,13 @@ public class ModifyCustomerData {
             }
         }
         writeCustomers(lines);
-        System.out.println("Customer does not exist.");
     }
 
     public static void modifySpendings(String customerId, Double cost) {
+        if (!RetriveCustomerData.isAvailableId(customerId)) {
+            System.out.println("Customer does not exist");
+            return;
+        }
         List<String> lines = RetriveCustomerData.readCustomerInfo();
         for (int i=0; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
@@ -96,6 +103,5 @@ public class ModifyCustomerData {
             }
         }
         writeCustomers(lines);
-        System.out.println("Customer does not exist.");
     }
 }

@@ -62,11 +62,11 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    System.out.println("View Product List");
+                    System.out.println("\nView Product List");
                     ViewData.print();
                     break;
                 case 2:
-                    System.out.println("Add New Product");
+                    System.out.println("\nAdd New Product");
                     System.out.print("Enter Product Name: ");
                     productName = sc.nextLine();
                     System.out.print("Enter Cost: ");
@@ -78,29 +78,29 @@ public class Main {
                     UploadProductData.addProduct(productName, productCost, productQuantity);
                     break;
                 case 3:
-                    System.out.println("Remove a Product from List");
+                    System.out.println("\nRemove a Product from List");
                     System.out.print("Enter Product Name or ID: ");
                     productInfo = sc.nextLine();
                     productIdentifierIndex = getProductIdentifierIndex(productInfo);
                     ModifyProductData.removeProduct(productInfo, productIdentifierIndex);
                     break;
                 case 4:
-                    System.out.println("Modify Existing Product");
+                    System.out.println("\nModify Existing Product");
                     modifyExistingProductMenu(sc);
                     break;
                 case 5:
-                    System.out.println("View Purchase History");
+                    System.out.println("\nView Purchase History");
                     ViewSalesData.printPurchase();
                     break;
                 case 6:
-                    System.out.println("View Customer Information");
+                    System.out.println("\nView Customer Information");
                     ViewCustomerData.printAllCustomerInfo();
                     break;
                 case 0:
-                    System.out.println("Exiting Seller Menu...");
+                    System.out.println("\nExiting Seller Menu...");
                     break;
                 default:
-                    System.out.println("Invalid choice. Please enter a number from the menu.");
+                    System.out.println("\nInvalid choice. Please enter a number from the menu.");
             }
         } while (choice != 0);
     }
@@ -124,41 +124,49 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    System.out.println("View Profile");
-                    System.out.println("Enter Customer Name: ");
+                    System.out.println("\nView Profile");
+                    System.out.print("Enter Customer Name: ");
                     customerName = sc.nextLine();
+                    if(!RetriveCustomerData.isAvailableName(customerName)) {
+                        System.out.println("Customer does not exist");
+                        break;
+                    }
                     customerId = RetriveCustomerData.getCustomerId(customerName);
                     ViewCustomerData.printCustomerProfile(customerId);
                     break;
                 case 2:
-                    System.out.println("New Customer Login");
-                    System.out.println("Enter Customer Name: ");
+                    System.out.println("\nNew Customer Login");
+                    System.out.print("Enter Customer Name: ");
                     customerName = sc.nextLine();
-                    System.out.println("Enter Initial Balance: ");
+                    System.out.print("Enter Initial Balance: ");
                     customerBalance = sc.nextDouble();
                     sc.nextLine();
                     new Login(customerName, customerBalance);
                     break;
                 case 3:
-                    System.out.println("View Product List");
+                    System.out.println("\nView Product List");
                     ViewData.print();
                     break;
                 case 4:
-                    System.out.println("View Purchase History");
+                    System.out.println("\nView Purchase History");
                     System.out.println("Enter Customer Name: ");
                     customerName = sc.nextLine();
+                    if(!RetriveCustomerData.isAvailableName(customerName)) {
+                        System.out.println("Customer does not exist");
+                        break;
+                    }
                     customerId = RetriveCustomerData.getCustomerId(customerName);
                     ViewSalesData.printCustomerPurchase(customerId);
                     break;
                 case 5:
-                    System.out.println("Buy Product");
+                    System.out.println("\nBuy Product");
                     buyProduct(sc);
                     break;
                 case 0:
-                    System.out.println("Exiting Customer Menu...");
+                    System.out.println("\nExiting Customer Menu...");
                     break;
                 default:
-                    System.out.println("Invalid choice. Please enter a number from the menu.");
+                    System.out.println("\nInvalid choice. Please enter a number from the menu.");
             }
         } while (choice != 0);
     }
@@ -183,7 +191,7 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    System.out.println("Add more Items");
+                    System.out.println("\nAdd more Items");
                     System.out.print("Enter Product Name or ID: ");
                     productInfo = sc.nextLine();
                     System.out.print("Enter Number of Items to be added: ");
@@ -193,7 +201,7 @@ public class Main {
                     ModifyProductData.addItems(productInfo, productIdentifierIndex, quantity);                    
                     break;
                 case 2:
-                    System.out.println("Remove Items");
+                    System.out.println("\nRemove Items");
                     System.out.print("Enter Product Name or ID: ");
                     productInfo = sc.nextLine();
                     System.out.print("Enter Number of Items to be removed: ");
@@ -203,7 +211,7 @@ public class Main {
                     ModifyProductData.removeItems(productInfo, productIdentifierIndex, quantity);                    
                     break;
                 case 3:
-                    System.out.println("Modify Product Quantity");
+                    System.out.println("\nModify Product Quantity");
                     System.out.print("Enter Product Name or ID: ");
                     productInfo = sc.nextLine();
                     System.out.print("Enter New Quantity: ");
@@ -213,7 +221,7 @@ public class Main {
                     ModifyProductData.modifyQuantity(productInfo, productIdentifierIndex, quantity);                   
                     break;
                 case 4:
-                    System.out.println("Modify Product Cost");
+                    System.out.println("\nModify Product Cost");
                     System.out.print("Enter Product Name or ID: ");
                     productInfo = sc.nextLine();
                     System.out.print("Enter New Cost: ");
@@ -223,10 +231,10 @@ public class Main {
                     ModifyProductData.modifyCost(productInfo, productIdentifierIndex, cost);            
                     break;
                 case 0:
-                    System.out.println("Exiting Product Menu...");
+                    System.out.println("\nExiting Product Menu...");
                     break;
                 default:
-                    System.out.println("Invalid choice. Please enter a number from the menu.");
+                    System.out.println("\nInvalid choice. Please enter a number from the menu.");
             }
         } while (choice != 0);
     }
@@ -268,10 +276,10 @@ public class Main {
         Double bill = requiredQuantity * costPerItem;
         System.out.println("Total Bill: " + bill);
 
-        System.out.println("Enter Customer Name: ");
+        System.out.print("Enter Customer Name: ");
         String customerName = sc.nextLine();
-        if(!RetriveCustomerData.isAvailable(customerName)) {
-            System.out.println("Customer does not exist. Create a Profile First.");
+        if(!RetriveCustomerData.isAvailableName(customerName)) {
+            System.out.println("Customer does not exist.\nCreate a Profile First.");
             return;
         }
 
