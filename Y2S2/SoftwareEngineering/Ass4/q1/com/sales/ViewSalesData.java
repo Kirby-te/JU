@@ -25,7 +25,7 @@ public class ViewSalesData {
                 count++;
                 System.out.println(purchase[0] + "\t" + purchase[1] + "\t" + 
                                purchase[2] + "\t" + purchase[3] + "\t" +
-                               purchase[4] + "\t" + purchase[5]);
+                               purchase[4]);
             }
         }
         System.out.println("Total Purchases: " + count);
