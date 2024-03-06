@@ -47,7 +47,7 @@ public class ModifyProductData {
             return;
         }
 
-        if()
+        // if()
 
         List<String> lines = com.inventory.RetriveData.readProducts();
         for(int i = 0; i < lines.size(); i++) {
