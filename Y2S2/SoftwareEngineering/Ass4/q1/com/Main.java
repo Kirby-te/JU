@@ -1,6 +1,7 @@
 package com;
 
 import java.util.Scanner;
+
 import com.inventory.*;
 import com.seller.*;
 import com.customer.*;
@@ -42,15 +43,14 @@ public class Main {
     private static void sellerMenu(Scanner sc) {
         int choice;
         String productName;
-        String productInfo;
+        String productID;
         Double productCost;
         int productQuantity;
-        int productIdentifierIndex;
 
         do {
             System.out.println("\nSeller Menu:");
             System.out.println("1. View Product List");
-            System.out.println("2. Add Product");
+            System.out.println("2. Add New Product");
             System.out.println("3. Remove Product");
             System.out.println("4. Modify Existing Product");
             System.out.println("5. View Purchase History");
@@ -66,23 +66,22 @@ public class Main {
                     ViewData.print();
                     break;
                 case 2:
-                    System.out.println("\nAdd New Product");
-                    System.out.print("Enter Product Name: ");
+                    System.out.println("\nEnter Product Info");
+                    System.out.print("Name: ");
                     productName = sc.nextLine();
-                    System.out.print("Enter Cost: ");
+                    System.out.print("Cost: ");
                     productCost = sc.nextDouble();
                     sc.nextLine();
-                    System.out.print("Enter Quantity: ");
+                    System.out.print("Initial Quantity: ");
                     productQuantity = sc.nextInt();
                     sc.nextLine();
                     UploadProductData.addProduct(productName, productCost, productQuantity);
                     break;
                 case 3:
                     System.out.println("\nRemove a Product from List");
-                    System.out.print("Enter Product Name or ID: ");
-                    productInfo = sc.nextLine();
-                    productIdentifierIndex = getProductIdentifierIndex(productInfo);
-                    ModifyProductData.removeProduct(productInfo, productIdentifierIndex);
+                    System.out.print("Enter Product ID: ");
+                    productID = sc.nextLine();
+                    ModifyProductData.removeProduct(productID);
                     break;
                 case 4:
                     System.out.println("\nModify Existing Product");
@@ -107,16 +106,14 @@ public class Main {
 
     private static void customerMenu(Scanner sc) {
         int choice;
-        String customerId;
         String customerName;
         Double customerBalance;
         do {
             System.out.println("\nCustomer Menu:");
-            System.out.println("1. View Profile");
-            System.out.println("2. New Login");
+            System.out.println("1. Profile Menu");
+            System.out.println("2. Create Profile");
             System.out.println("3. View Product List");
-            System.out.println("4. View Purchase History");
-            System.out.println("5. Buy Product");
+            System.out.println("4. Buy Product");
             System.out.println("0. Previous Menu");
             System.out.print("Enter your choice: ");
             choice = sc.nextInt();
@@ -124,21 +121,13 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    System.out.println("\nView Profile");
-                    System.out.print("Enter Customer Name: ");
-                    customerName = sc.nextLine();
-                    if(!RetriveCustomerData.isAvailableName(customerName)) {
-                        System.out.println("Customer does not exist");
-                        break;
-                    }
-                    customerId = RetriveCustomerData.getCustomerId(customerName);
-                    ViewCustomerData.printCustomerProfile(customerId);
+                    viewProfileMenu(sc);
                     break;
                 case 2:
-                    System.out.println("\nNew Customer Login");
-                    System.out.print("Enter Customer Name: ");
+                    System.out.println("\nEnter Customer Info");
+                    System.out.print("Name: ");
                     customerName = sc.nextLine();
-                    System.out.print("Enter Initial Balance: ");
+                    System.out.print("Initial Balance: ");
                     customerBalance = sc.nextDouble();
                     sc.nextLine();
                     new Login(customerName, customerBalance);
@@ -148,17 +137,6 @@ public class Main {
                     ViewData.print();
                     break;
                 case 4:
-                    System.out.println("\nView Purchase History");
-                    System.out.println("Enter Customer Name: ");
-                    customerName = sc.nextLine();
-                    if(!RetriveCustomerData.isAvailableName(customerName)) {
-                        System.out.println("Customer does not exist");
-                        break;
-                    }
-                    customerId = RetriveCustomerData.getCustomerId(customerName);
-                    ViewSalesData.printCustomerPurchase(customerId);
-                    break;
-                case 5:
                     System.out.println("\nBuy Product");
                     buyProduct(sc);
                     break;
@@ -173,17 +151,17 @@ public class Main {
 
     private static void modifyExistingProductMenu(Scanner sc) {
         int choice;
-        String productInfo;
-        int quantity;
-        Double cost;
-        int productIdentifierIndex;
+        String productID;
+        int newQuantity, currentQuantity;
+        Double newCost, currentCost;
+
+        System.out.print("Enter Product ID: ");
+        productID = sc.nextLine();
 
         do {
             System.out.println("\nProduct Menu:");
-            System.out.println("1. Add Items");
-            System.out.println("2. Remove Items");
-            System.out.println("3. Change Quantity");
-            System.out.println("4. Change Cost");
+            System.out.println("1. Modify Quantity");
+            System.out.println("2. Modify Cost");
             System.out.println("0. Previoud Menu");
             System.out.print("Enter your choice: ");
             choice = sc.nextInt();
@@ -191,44 +169,22 @@ public class Main {
 
             switch (choice) {
                 case 1:
-                    System.out.println("\nAdd more Items");
-                    System.out.print("Enter Product Name or ID: ");
-                    productInfo = sc.nextLine();
-                    System.out.print("Enter Number of Items to be added: ");
-                    quantity = sc.nextInt();
+                    System.out.println("\nModify Product Quantity");
+                    currentQuantity = RetriveData.getQuantity(productID);
+                    System.out.println("Current Qunatity: " + currentQuantity);
+                    System.out.print("Enter New Quantity: ");
+                    newQuantity = sc.nextInt();
                     sc.nextLine();
-                    productIdentifierIndex = getProductIdentifierIndex(productInfo);
-                    ModifyProductData.addItems(productInfo, productIdentifierIndex, quantity);                    
+                    ModifyProductData.modifyQuantity(productID, newQuantity);                   
                     break;
                 case 2:
-                    System.out.println("\nRemove Items");
-                    System.out.print("Enter Product Name or ID: ");
-                    productInfo = sc.nextLine();
-                    System.out.print("Enter Number of Items to be removed: ");
-                    quantity = sc.nextInt();
-                    sc.nextLine();
-                    productIdentifierIndex = getProductIdentifierIndex(productInfo);
-                    ModifyProductData.removeItems(productInfo, productIdentifierIndex, quantity);                    
-                    break;
-                case 3:
-                    System.out.println("\nModify Product Quantity");
-                    System.out.print("Enter Product Name or ID: ");
-                    productInfo = sc.nextLine();
-                    System.out.print("Enter New Quantity: ");
-                    quantity = sc.nextInt();
-                    sc.nextLine();
-                    productIdentifierIndex = getProductIdentifierIndex(productInfo);
-                    ModifyProductData.modifyQuantity(productInfo, productIdentifierIndex, quantity);                   
-                    break;
-                case 4:
                     System.out.println("\nModify Product Cost");
-                    System.out.print("Enter Product Name or ID: ");
-                    productInfo = sc.nextLine();
+                    currentCost = RetriveData.getCost(productID);
+                    System.err.println("Current Cost: " + currentCost);
                     System.out.print("Enter New Cost: ");
-                    cost = sc.nextDouble();
+                    newCost = sc.nextDouble();
                     sc.nextLine();
-                    productIdentifierIndex = getProductIdentifierIndex(productInfo);
-                    ModifyProductData.modifyCost(productInfo, productIdentifierIndex, cost);            
+                    ModifyProductData.modifyCost(productID, newCost);            
                     break;
                 case 0:
                     System.out.println("\nExiting Product Menu...");
@@ -239,35 +195,92 @@ public class Main {
         } while (choice != 0);
     }
 
+    private static void viewProfileMenu(Scanner sc) {
+        int choice;
+        String customerName;
+        String customerId;
+        Double credit;
+
+        System.out.println("\nCustomer Profile Menu");
+        System.out.print("Enter Customer Name: ");
+        customerName = sc.nextLine();
+        if(!RetriveCustomerData.isAvailableName(customerName)) {
+            System.out.println("Customer does not exist");
+            return;
+        }
+
+        customerId = RetriveCustomerData.getCustomerId(customerName);
+        ViewCustomerData.printCustomerProfile(customerId);
+
+        do {
+            System.out.println("\n1. Add Balance");
+            System.out.println("2. View Purchase History");
+            System.out.println("3. View Profile");
+            System.out.println("0. Previous Menu");
+            System.out.print("\nEnter Your Choice: ");
+            choice = sc.nextInt();
+            sc.nextLine();
+            switch (choice) {
+                case 1:
+                    System.out.println("Add Balance");
+                    System.out.print("Enter Credit Amount: ");
+                    credit = sc.nextDouble();
+                    sc.nextLine();
+                    ModifyCustomerData.addBalance(customerId, credit);
+                    break;
+                case 2:
+                    System.out.println("Purchase History");
+                    ViewSalesData.printCustomerPurchase(customerId);
+                    break;
+                case 3:
+                    System.out.println("Profile");
+                    ViewCustomerData.printCustomerProfile(customerId);
+                    break;
+                case 0:
+                    System.out.println("\nExiting Product Menu...");
+                    break;
+                default:
+                    System.out.println("\nInvalid choice. Please enter a number from the menu.");
+            }
+        } while(choice != 0);
+    }
+
     private static void buyProduct(Scanner sc) {
         System.out.print("Enter Product Name or ID: ");
-        String productInfo = sc.nextLine();
-        int productIdentifierIndex = getProductIdentifierIndex(productInfo);
-        if(!RetriveData.isAvailable(productInfo, productIdentifierIndex)) {
+        String productID = sc.nextLine();
+    
+        if(!RetriveData.isAvailable(productID)) {
             System.out.println("Product does not exist");
             return;
         }
 
-        int availableQuantity = RetriveData.getQuantity(productInfo, productIdentifierIndex);
-        Double costPerItem = RetriveData.getCost(productInfo, productIdentifierIndex);    
+        int availableQuantity = RetriveData.getQuantity(productID);
+        Double costPerItem = RetriveData.getCost(productID);    
         System.out.println("Available quantity: " + availableQuantity);
         System.out.println("Cost per item: " + costPerItem);
 
         System.out.print("Enter Required Quantity: ");
         int requiredQuantity = sc.nextInt();
         sc.nextLine();
+
+        while (requiredQuantity <= 0) {
+            System.out.println("required quantity has to be positive");
+            System.out.print("\nEnter Required Quantity: ");
+            requiredQuantity = sc.nextInt();
+            sc.nextLine();
+        }
         
         if (requiredQuantity > availableQuantity) {
-            System.out.println("Not enough quantity left.");
-            System.out.println("Required quantity: " + requiredQuantity);
-            System.out.println("Available quantity: " + availableQuantity);
+            System.out.println("not enough quantity left.");
+            System.out.println("required quantity: " + requiredQuantity);
+            System.out.println("available quantity: " + availableQuantity);
 
             System.out.println("\n1. Continue with the Purchase");
             System.out.println("2. Cancel");
             int choice1 = sc.nextInt();
             sc.nextLine();
             if(choice1 == 2) {
-                System.out.println("Purchase canceled");
+                System.out.println("purchase canceled");
                 return;
             }
             requiredQuantity = availableQuantity;
@@ -279,40 +292,25 @@ public class Main {
         System.out.print("Enter Customer Name: ");
         String customerName = sc.nextLine();
         if(!RetriveCustomerData.isAvailableName(customerName)) {
-            System.out.println("Customer does not exist.\nCreate a Profile First.");
+            System.out.println("customer does not exist");
+            System.out.println("create a profile first");
             return;
         }
 
-        Double customerBalance = RetriveCustomerData.getBalance(customerName);
         String customerId = RetriveCustomerData.getCustomerId(customerName);
-        String productId = RetriveData.getProductId(productInfo, productIdentifierIndex);
+        Double customerBalance = RetriveCustomerData.getBalance(customerId);
+        String productId = RetriveData.getProductId(productID);
 
         if (customerBalance < bill) {
-            System.out.println("InSufficient Balance... \nPurchase Canceled...");
-            UploadSalesData.addPurchase(customerId, productId, "Failed", bill);
+            System.out.println("insufficient balance \npurchase canceled");
+            UploadSalesData.addPurchase(customerId, productId, "Failed", requiredQuantity, bill);
             ModifyCustomerData.incrementFailedPurchases(customerId);
             return;
         }
 
         ModifyCustomerData.removeBalance(customerName, bill);
         ModifyCustomerData.incrementSuccessfulPurchases(customerName);
-        UploadSalesData.addPurchase(customerId, productId, "Successful", bill);
+        UploadSalesData.addPurchase(customerId, productId, "Passed", requiredQuantity, bill);
         System.out.println("Purchase Successful");
-    }
-
-    private static boolean isInteger(String s) {
-        try {
-            Integer.parseInt(s);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    private static int getProductIdentifierIndex(String s) {
-        if (isInteger(s)) {
-            return 0;
-        }
-        return 1;
     }
 }

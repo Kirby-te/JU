@@ -9,6 +9,16 @@ public class Login {
     private double total_spending;
 
     public Login(String customerName, Double balance) {
+        if(isInteger(customerName)) {
+            System.out.println("Name can not be a number");
+            System.out.println("Login Failed");
+            return;
+        }
+        if(balance < 0) {
+            System.out.println("Balance can not be negative");
+            System.out.println("Login Failed");
+            return;
+        }
         if(RetriveCustomerData.isAvailableName(customerName)) {
             System.out.println("Customer already exists.");
             this.customerId =
@@ -53,5 +63,14 @@ public class Login {
 
     public double getTotal_spending() {
         return total_spending;
+    }
+
+    private static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 }

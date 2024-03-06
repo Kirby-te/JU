@@ -30,72 +30,91 @@ public class RetriveData {
     }
 
     /*
-     * for productId the identifierIndex = 0
+     * for productId the 0 = 0
      * for productname the identfierIndex = 1 
     */
-    public static boolean isAvailable(String productIdentifier, int identifierIndex) {
+    public static boolean isAvailable(String productID) {
+         if (productID == null) {
+            return false;
+        }
+
         List<String> lines = readProducts();
         for (String product : lines) {
+            if (product.isBlank())
+                continue;
             String[] products = product.split(", ");
-            if(productIdentifier.equals(products[identifierIndex])) {
+            if(productID.equals(products[0])) {
                 return true;
             }
         }
         return false;
     }
 
-    public static String getProductId(String productName, int identifierIndex) {
-        if (identifierIndex == 0) {
-            return productName;
+    public static String getProductId(String productName) {
+         if (productName == null) {
+            return null;
         }
+
         List<String> lines = readProducts();
         for (String product : lines) {
+            if (product.isBlank())
+                continue;
             String[] products = product.split(", ");
             if(productName.equals(products[1])) {
                 return products[0];
             }
         }
-        System.out.println("Product doesn't exist");
         return null;
     }
 
-    public static String getProductName(String productId, int identifierIndex) {
-        if (identifierIndex == 1) {
-            return productId;
+    public static String getProductName(String productId) {
+         if (productId == null) {
+            return null;
         }
-        
+
         List<String> lines = readProducts();
         for (String product : lines) {
+            if (product.isBlank())
+                continue;
             String[] products = product.split(", ");
             if(productId.equals(products[0])) {
                 return products[1];
             }
         }
-        System.out.println("Product doesn't exist");
         return null;
     }
 
-    public static double getCost(String productIdentifier, int identifierIndex) {
+    public static double getCost(String productID) {
+         if (productID == null) {
+            return 0;
+        }
+
         List<String> lines = readProducts();
         for (String product : lines) {
+            if (product.isBlank())
+                continue;
             String[] products = product.split(", ");
-            if(productIdentifier.equals(products[identifierIndex])) {
+            if(productID.equals(products[0])) {
                 return Double.parseDouble(products[2]);
             }
         }
-        System.out.println("Product doesn't exist");
         return -1.0;
     }
 
-    public static int getQuantity(String productIdentifier, int identifierIndex) {
+    public static int getQuantity(String productID) {
+         if (productID == null) {
+            return 0;
+        }
+
         List<String> lines = readProducts();
         for (String product : lines) {
+            if (product.isBlank())
+                continue;
             String[] products = product.split(", ");
-            if(productIdentifier.equals(products[identifierIndex])) {
+            if(productID.equals(products[0])) {
                 return Integer.parseInt(products[3]);
             }
         }
-        System.out.println("Product doesn't exist");
         return -1;
     }
 }
