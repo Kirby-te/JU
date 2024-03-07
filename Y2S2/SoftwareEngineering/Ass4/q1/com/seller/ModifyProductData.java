@@ -8,10 +8,6 @@ import java.util.List;
 public class ModifyProductData {
     private static final String filePath = "./database/inventory.csv";
 
-    /*
-     * creating new file every-time with neccesry modifications
-     * using this to change certain produxt value
-    */
     private static void writeProducts(List<String> lines) {
         try(PrintWriter pw = new PrintWriter(new FileWriter(filePath))) {
             for (String line : lines) {
@@ -47,10 +43,8 @@ public class ModifyProductData {
             return;
         }
 
-        // if()
-
         List<String> lines = com.inventory.RetriveData.readProducts();
-        for(int i = 0; i < lines.size(); i++) {
+        for(int i = 1; i < lines.size(); i++) {
             String[] products = lines.get(i).split(", ");
             if(productID.equals(products[0])) {
                 products[2] = String.valueOf(newCost);
@@ -74,7 +68,7 @@ public class ModifyProductData {
         }
 
         List<String> lines = com.inventory.RetriveData.readProducts();
-        for(int i = 0; i < lines.size(); i++) {
+        for(int i = 1; i < lines.size(); i++) {
             String[] products = lines.get(i).split(", ");
             if(productID.equals(products[0])) {
                 products[3] = String.valueOf(newQuantity);
@@ -93,12 +87,12 @@ public class ModifyProductData {
         }
 
         if(supply < 0) {
-            System.out.println("Supply has to be positive integer");
+            System.out.println("Supply can not be negative");
             return;
         }
 
         List<String> lines = com.inventory.RetriveData.readProducts();
-        for(int i = 0; i < lines.size(); i++) {
+        for(int i = 1; i < lines.size(); i++) {
             String[] products = lines.get(i).split(", ");
             if(productID.equals(products[0])) {
                 int prevVal = Integer.parseInt(products[3]);
@@ -117,9 +111,14 @@ public class ModifyProductData {
             System.out.println("Product does not exist.");
             return;
         }
+
+        if(demand < 0) {
+            System.out.println("Demand can not be negative");
+            return;
+        }
         
         List<String> lines = com.inventory.RetriveData.readProducts();
-        for(int i = 0; i < lines.size(); i++) {
+        for(int i = 1; i < lines.size(); i++) {
             String[] products = lines.get(i).split(", ");
             if(productID.equals(products[0])) {
                 int prevVal = Integer.parseInt(products[3]);
@@ -134,6 +133,5 @@ public class ModifyProductData {
             }
         }
         writeProducts(lines);
-        System.out.println("Removed required items.");
     }
 }
