@@ -26,7 +26,8 @@ public class ModifyCustomerData {
             return;
         }
         List<String> lines = RetriveCustomerData.readCustomerInfo();
-        for (int i=0; i<lines.size(); i++) {
+        // ignore header
+        for (int i=1; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
             if(customerId.equals(customer[0])) {
                 Double currentBalance = Double.parseDouble(customer[2]);
@@ -45,7 +46,8 @@ public class ModifyCustomerData {
             return;
         }
         List<String> lines = RetriveCustomerData.readCustomerInfo();
-        for (int i=0; i<lines.size(); i++) {
+        // ignore header
+        for (int i=1; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
             if(customerId.equals(customer[0])) {
                 Double currentBalance = Double.parseDouble(customer[2]);
@@ -67,11 +69,12 @@ public class ModifyCustomerData {
             return;
         }
         List<String> lines = RetriveCustomerData.readCustomerInfo();
-        for (int i=0; i<lines.size(); i++) {
+        // ignore header
+        for (int i=1; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
             if(customerId.equals(customer[0])) {
                 int sucPur = Integer.parseInt(customer[3]);
-                customer[3] = String.valueOf(sucPur++);
+                customer[3] = String.valueOf(sucPur+1);
                 lines.set(i, String.join(", ", customer));
                 break;
             }
@@ -85,11 +88,12 @@ public class ModifyCustomerData {
             return;
         }
         List<String> lines = RetriveCustomerData.readCustomerInfo();
-        for (int i=0; i<lines.size(); i++) {
+        // ignore header
+        for (int i=1; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
             if(customerId.equals(customer[0])) {
                 int failPur = Integer.parseInt(customer[4]);
-                customer[4] = String.valueOf(failPur++);
+                customer[4] = String.valueOf(failPur+1);
                 lines.set(i, String.join(", ", customer));
                 break;
             }
@@ -97,13 +101,14 @@ public class ModifyCustomerData {
         writeCustomers(lines);
     }
 
-    public static void modifySpendings(String customerId, Double cost) {
+    public static void increaseSpendings(String customerId, Double cost) {
         if (!RetriveCustomerData.isAvailableId(customerId)) {
             System.out.println("Customer does not exist");
             return;
         }
         List<String> lines = RetriveCustomerData.readCustomerInfo();
-        for (int i=0; i<lines.size(); i++) {
+        // ignore header
+        for (int i=1; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
             if(customerId.equals(customer[0])) {
                 Double currentSpending = Double.parseDouble(customer[5]);

@@ -14,7 +14,6 @@ public class ModifyProductData {
     */
     private static void writeProducts(List<String> lines) {
         try(PrintWriter pw = new PrintWriter(new FileWriter(filePath))) {
-            pw.println("product_id, product_name, cost_per_item, quantity");// header
             for (String line : lines) {
                 if(!line.isBlank())
                     pw.println(line);

@@ -246,14 +246,22 @@ public class Main {
     }
 
     private static void buyProduct(Scanner sc) {
+        System.out.print("Enter Customer Name: ");
+        String customerName = sc.nextLine();
+        if(!RetriveCustomerData.isAvailableName(customerName)) {
+            System.out.println("customer does not exist");
+            System.out.println("create a profile first");
+            return;
+        }
+        String customerId = RetriveCustomerData.getCustomerId(customerName);
+        Double customerBalance = RetriveCustomerData.getBalance(customerId);
+        
         System.out.print("Enter Product ID: ");
         String productID = sc.nextLine();
-    
         if(!RetriveData.isAvailable(productID)) {
             System.out.println("Product does not exist");
             return;
         }
-
         int availableQuantity = RetriveData.getQuantity(productID);
         Double costPerItem = RetriveData.getCost(productID);    
         System.out.println("Available quantity: " + availableQuantity);
@@ -264,16 +272,16 @@ public class Main {
         sc.nextLine();
 
         while (requiredQuantity <= 0) {
-            System.out.println("required quantity has to be positive");
+            System.out.println("Required quantity has to be positive");
             System.out.print("\nEnter Required Quantity: ");
             requiredQuantity = sc.nextInt();
             sc.nextLine();
         }
         
         if (requiredQuantity > availableQuantity) {
-            System.out.println("not enough quantity left.");
-            System.out.println("required quantity: " + requiredQuantity);
-            System.out.println("available quantity: " + availableQuantity);
+            System.out.println("\nNot enough quantity left.");
+            System.out.println("Required Quantity: " + requiredQuantity);
+            System.out.println("Available Quantity: " + availableQuantity);
 
             System.out.println("\n1. Continue with the Purchase, buy the available quantity");
             System.out.println("2. Cancel");
@@ -289,28 +297,18 @@ public class Main {
         Double bill = requiredQuantity * costPerItem;
         System.out.println("Total Bill: " + bill);
 
-        System.out.print("Enter Customer Name: ");
-        String customerName = sc.nextLine();
-        if(!RetriveCustomerData.isAvailableName(customerName)) {
-            System.out.println("customer does not exist");
-            System.out.println("create a profile first");
-            return;
-        }
-
-        String customerId = RetriveCustomerData.getCustomerId(customerName);
-        Double customerBalance = RetriveCustomerData.getBalance(customerId);
-        String productId = RetriveData.getProductId(productID);
-
         if (customerBalance < bill) {
             System.out.println("insufficient balance \npurchase canceled");
-            UploadSalesData.addPurchase(customerId, productId, "Failed", requiredQuantity, bill);
+            UploadSalesData.addPurchase(customerId, productID, "Failed", requiredQuantity, bill);
             ModifyCustomerData.incrementFailedPurchases(customerId);
             return;
         }
 
-        ModifyCustomerData.removeBalance(customerName, bill);
-        ModifyCustomerData.incrementSuccessfulPurchases(customerName);
-        UploadSalesData.addPurchase(customerId, productId, "Passed", requiredQuantity, bill);
+        ModifyCustomerData.removeBalance(customerId, bill);
+        ModifyCustomerData.incrementSuccessfulPurchases(customerId);
+        ModifyCustomerData.increaseSpendings(customerId, bill);
+        ModifyProductData.removeItems(productID, requiredQuantity);
+        UploadSalesData.addPurchase(customerId, productID, "Passed", requiredQuantity, bill);
         System.out.println("Purchase Successful");
     }
 }

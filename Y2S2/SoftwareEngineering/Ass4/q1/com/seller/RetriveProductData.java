@@ -8,8 +8,9 @@ public class RetriveProductData {
         int currentProductId = 0;
 
         List<String> products = com.inventory.RetriveData.readProducts();
-        for (String product : products) {
-            String[] productDetails = product.split(", ");
+        // ignore the header
+        for (int i=1; i<products.size(); i++) {
+            String[] productDetails = products.get(i).split(", ");
             currentProductId = Integer.parseInt(productDetails[0]);
             if (currentProductId > nextProductId) {
                 nextProductId = currentProductId;
