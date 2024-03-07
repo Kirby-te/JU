@@ -246,7 +246,7 @@ public class Main {
     }
 
     private static void buyProduct(Scanner sc) {
-        System.out.print("Enter Product Name or ID: ");
+        System.out.print("Enter Product ID: ");
         String productID = sc.nextLine();
     
         if(!RetriveData.isAvailable(productID)) {
@@ -275,7 +275,7 @@ public class Main {
             System.out.println("required quantity: " + requiredQuantity);
             System.out.println("available quantity: " + availableQuantity);
 
-            System.out.println("\n1. Continue with the Purchase");
+            System.out.println("\n1. Continue with the Purchase, buy the available quantity");
             System.out.println("2. Cancel");
             int choice1 = sc.nextInt();
             sc.nextLine();

@@ -1,2 +1,2 @@
 customer_id, product_id, purchase_status, purchase_quantity, purchase_cost, date_and_time
-2, 6, Failed, 1, 54.0, 2024-03-06 19:47:09.871
+1, null, Passed, 2, 10.0, 2024-03-07 13:31:14.374

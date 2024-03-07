@@ -13,7 +13,6 @@ public class RetriveSalesData {
     public static List<String> readSalesInfo() {
         List<String> lines = new ArrayList<>();
         try(BufferedReader br = new BufferedReader(new FileReader(salesFile))) {
-            br.readLine(); // skip the header-line
             String line;
             while((line = br.readLine()) != null) {
                 if (!line.isBlank())

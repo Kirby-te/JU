@@ -13,7 +13,6 @@ public class RetriveData {
     public static List<String> readProducts() {
         List<String> lines = new ArrayList<>();
         try(BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            br.readLine(); // skip the header-line
             String line;
             while((line = br.readLine()) != null) {
                 if (!line.isBlank())
@@ -34,7 +33,7 @@ public class RetriveData {
      * for productname the identfierIndex = 1 
     */
     public static boolean isAvailable(String productID) {
-         if (productID == null) {
+        if (productID == null) {
             return false;
         }
 
@@ -68,7 +67,7 @@ public class RetriveData {
     }
 
     public static String getProductName(String productId) {
-         if (productId == null) {
+        if (productId == null) {
             return null;
         }
 
@@ -85,7 +84,7 @@ public class RetriveData {
     }
 
     public static double getCost(String productID) {
-         if (productID == null) {
+        if (productID == null) {
             return 0;
         }
 
@@ -102,7 +101,7 @@ public class RetriveData {
     }
 
     public static int getQuantity(String productID) {
-         if (productID == null) {
+        if (productID == null) {
             return 0;
         }
 

@@ -9,9 +9,9 @@ public class ModifySalesData {
     private static final String salesFile = "./database/purchase_history.csv";
 
     public static void writelines(List<String> lines) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(salesFile, true))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(salesFile))) {
             for (String line : lines) {
-                if (line.isBlank())
+                if (!line.isBlank())
                     pw.println(line);
             }
         }

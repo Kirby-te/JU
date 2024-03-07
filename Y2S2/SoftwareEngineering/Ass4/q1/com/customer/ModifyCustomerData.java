@@ -9,9 +9,9 @@ public class ModifyCustomerData {
     private static final String customerFile = "./database/customers.csv";
 
     public static void writeCustomers(List<String> lines) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(customerFile, true))) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(customerFile))) {
             for (String line : lines) {
-                if (line.isBlank())
+                if (!line.isBlank())
                     pw.println(line);
             }
         }
@@ -21,21 +21,29 @@ public class ModifyCustomerData {
     }
 
     public static void addBalance(String customerId, Double credit) {
+        if(!RetriveCustomerData.isAvailableId(customerId)) {
+            System.out.println("Customer does not exist.");
+            return;
+        }
         List<String> lines = RetriveCustomerData.readCustomerInfo();
         for (int i=0; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
             if(customerId.equals(customer[0])) {
                 Double currentBalance = Double.parseDouble(customer[2]);
                 customer[2] = String.valueOf(currentBalance + credit);
+                System.out.println(customer[2]);
                 lines.set(i, String.join(", ", customer));
                 break;
             }
         }
         writeCustomers(lines);
-        System.out.println("Customer does not exist.");
     }
 
     public static void removeBalance(String customerId, Double debit) {
+        if(!RetriveCustomerData.isAvailableId(customerId)) {
+            System.out.println("Customer does not exist.");
+            return;
+        }
         List<String> lines = RetriveCustomerData.readCustomerInfo();
         for (int i=0; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
@@ -51,10 +59,13 @@ public class ModifyCustomerData {
             }
         }
         writeCustomers(lines);
-        System.out.println("Customer does not exist.");
     }
 
     public static void incrementSuccessfulPurchases(String customerId) {
+        if(!RetriveCustomerData.isAvailableId(customerId)) {
+            System.out.println("Customer does not exist.");
+            return;
+        }
         List<String> lines = RetriveCustomerData.readCustomerInfo();
         for (int i=0; i<lines.size(); i++) {
             String[] customer = lines.get(i).split(", ");
@@ -66,7 +77,6 @@ public class ModifyCustomerData {
             }
         }
         writeCustomers(lines);
-        System.out.println("Customer does not exist.");
     }
 
     public static void incrementFailedPurchases(String customerId) {
