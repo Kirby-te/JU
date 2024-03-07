@@ -13,7 +13,6 @@ public class RetriveCustomerData {
     public static List<String> readCustomerInfo() {
         List<String> lines = new ArrayList<>();
         try(BufferedReader br = new BufferedReader(new FileReader(customerFile))) {
-            br.readLine(); // skip the header-line
             String line;
             while((line = br.readLine()) != null) {
                 if (!line.isBlank())
@@ -30,6 +29,9 @@ public class RetriveCustomerData {
     }
 
     public static boolean isAvailableId(String customerId) {
+        if(customerId == null) {
+            return false;
+        }
         List<String> lines = readCustomerInfo();
         for (String line : lines) {
             String[] customer = line.split(", ");
@@ -41,6 +43,9 @@ public class RetriveCustomerData {
     }
 
     public static boolean isAvailableName(String customerName) {
+        if(customerName == null) {
+            return false;
+        }
         List<String> lines = readCustomerInfo();
         for (String line : lines) {
             String[] customer = line.split(", ");
@@ -52,6 +57,9 @@ public class RetriveCustomerData {
     }
 
     public static String getCustomerId(String customerName) {
+        if(customerName == null) {
+            return null;
+        }
         List<String> lines = readCustomerInfo();
         for (String line : lines) {
             String[] customer = line.split(", ");
@@ -64,6 +72,9 @@ public class RetriveCustomerData {
     }
 
     public static String getName(String customerId) {
+        if(customerId == null) {
+            return null;
+        }
         List<String> lines = readCustomerInfo();
         for (String line : lines) {
             String[] customer = line.split(", ");
@@ -76,6 +87,9 @@ public class RetriveCustomerData {
     }
 
     public static double getBalance(String customerId) {
+        if(customerId == null) {
+            return 0;
+        }
         List<String> lines = readCustomerInfo();
         for (String line : lines) {
             String[] customer = line.split(", ");
@@ -88,6 +102,9 @@ public class RetriveCustomerData {
     }
 
     public static int getSuccessfulPurchases(String customerId) {
+        if(customerId == null) {
+            return 0;
+        }
         List<String> lines = readCustomerInfo();
         for (String line : lines) {
             String[] customer = line.split(", ");
@@ -100,6 +117,9 @@ public class RetriveCustomerData {
     }
 
     public static int getFailedPurchases(String customerId) {
+        if(customerId == null) {
+            return 0;
+        }
         List<String> lines = readCustomerInfo();
         for (String line : lines) {
             String[] customer = line.split(", ");
@@ -112,6 +132,9 @@ public class RetriveCustomerData {
     }
 
     public static double getTotalSpendings(String customerId) {
+        if(customerId == null) {
+            return 0;
+        }
         List<String> lines = readCustomerInfo();
         for (String line : lines) {
             String[] customer = line.split(", ");
@@ -128,8 +151,11 @@ public class RetriveCustomerData {
         int currentCustomerId = 0;
 
         List<String> customers = readCustomerInfo();
-        for (String customer : customers) {
-            String[] customerDetails = customer.split(", ");
+        // ignore header
+        for (int i=1; i<customers.size(); i++) {
+            if(customers.get(i).isBlank())
+                continue;
+            String[] customerDetails = customers.get(i).split(", ");
             currentCustomerId = Integer.parseInt(customerDetails[0]);
             if (currentCustomerId > nextCustomerId) {
                 nextCustomerId = currentCustomerId;

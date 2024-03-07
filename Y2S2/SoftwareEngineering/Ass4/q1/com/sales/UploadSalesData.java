@@ -9,7 +9,7 @@ public class UploadSalesData {
     private static final String salesFile = "./database/purchase_history.csv";
 
     public static void addPurchase(String customerId, String productId, 
-            String purchaseStatus, Double cost) {
+            String purchaseStatus, int quantity, Double cost) {
         try(PrintWriter pw = new PrintWriter(new FileWriter(salesFile, true));) {
             Timestamp ts = new Timestamp(System.currentTimeMillis());
             
@@ -17,6 +17,7 @@ public class UploadSalesData {
                 customerId,
                 productId,
                 purchaseStatus,
+                String.valueOf(quantity),
                 String.valueOf(cost),
                 ts.toString()
             };

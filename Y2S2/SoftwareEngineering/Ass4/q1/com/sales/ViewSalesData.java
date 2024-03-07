@@ -24,8 +24,8 @@ public class ViewSalesData {
             if(customerId.equals(purchase[0])) {
                 count++;
                 System.out.println(purchase[0] + "\t" + purchase[1] + "\t" + 
-                               purchase[2] + "\t" + purchase[3] + "\t" +
-                               purchase[4]);
+                                   purchase[2] + "\t" + purchase[3] + "\t" +
+                                   purchase[4] + "\t" + purchase[5]);
             }
         }
         System.out.println("Total Purchases: " + count);
@@ -39,8 +39,8 @@ public class ViewSalesData {
             if(productId.equals(purchase[1])) {
                 count++;
                 System.out.println(purchase[0] + "\t" + purchase[1] + "\t" + 
-                               purchase[2] + "\t" + purchase[3] + "\t" +
-                               purchase[4] + "\t" + purchase[5]);
+                                   purchase[2] + "\t" + purchase[3] + "\t" +
+                                   purchase[4] + "\t" + purchase[5]);
             }
         }
         System.out.println("Total Purchases: " + count);
