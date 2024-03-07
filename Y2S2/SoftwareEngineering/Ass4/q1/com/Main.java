@@ -283,7 +283,7 @@ public class Main {
             System.out.println("Required Quantity: " + requiredQuantity);
             System.out.println("Available Quantity: " + availableQuantity);
 
-            System.out.println("\n1. Continue with the Purchase, buy the available quantity");
+            System.out.println("\n1. Continue with the Purchase, Buy the available quantity");
             System.out.println("2. Cancel");
             int choice1 = sc.nextInt();
             sc.nextLine();
@@ -297,6 +297,14 @@ public class Main {
         Double bill = requiredQuantity * costPerItem;
         System.out.println("Total Bill: " + bill);
 
+        do {
+            System.out.print("Confirm Purchase(y/n): ");
+            String conformation = sc.nextLine();
+            if (!conformation.equalsIgnoreCase("y")) {
+                break;
+            }
+        } while(true);
+        
         if (customerBalance < bill) {
             System.out.println("insufficient balance \npurchase canceled");
             UploadSalesData.addPurchase(customerId, productID, "Failed", requiredQuantity, bill);
