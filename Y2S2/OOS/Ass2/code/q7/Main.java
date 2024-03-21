@@ -5,11 +5,13 @@
 
 package q7;
 
+import java.util.Scanner;
+
 import q6.Search;
 
 public class Main {
     private static final int arrayLength = 100;
-    private static final int target = 12;
+    private static int target;
     private static int[] answer = new int[2];
 
     public static void main(String[] args) {
@@ -18,6 +20,12 @@ public class Main {
         for(int i=0; i<arr.length; i++) {
             arr[i] = i + 1;
         }
+
+        System.out.print("Enter eleme0nt to find (from 1 to " + arr[arr.length - 1] + "): ");
+        Scanner sc = new Scanner(System.in);
+        target = sc.nextInt();
+        sc.nextLine();
+        sc.close();
 
         Search s = new Search(arr, target);
 
