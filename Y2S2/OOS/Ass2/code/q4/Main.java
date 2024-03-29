@@ -14,12 +14,11 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class Main {
-    public static int x = 0, y = 1;
-    public static int result = 0;
-    public static int currentNumber = 0;
-    public static int currentNumberSign = 1;
-    public static final Object lock = new Object();
-    public static boolean isFileOpen;
+    private static int result = 0;
+    private static int currentNumber = 0;
+    private static int currentNumberSign = 1;
+    private static final Object lock = new Object();
+    private static boolean isFileOpen;
 
     private static boolean isNumber(int i) {
         if(i >= 48 && i <= 57) return true;
