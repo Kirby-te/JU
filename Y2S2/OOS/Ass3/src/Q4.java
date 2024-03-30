@@ -1,12 +1,11 @@
 import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
-import test.Emp;
- 
+
 public class Q4 {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static void main(String[] args) throws ClassNotFoundException {
-        Class c = Class.forName("test.Emp");
+        Class c = Class.forName("Emp");
         Constructor[] cons = c.getDeclaredConstructors();
          
         for(Constructor con : cons) {
@@ -15,7 +14,7 @@ public class Q4 {
              
             Parameter[] params = con.getParameters();
             for(Parameter param : params) {
-                System.out.println("Constructor's parameter : " + parameter);
+                System.out.println("Constructor's parameter : " + param);
             } 
             System.out.println();
         }
@@ -41,11 +40,10 @@ public class Q4 {
             System.out.println("Name of class: " + x.getName());
         }
       
-        Annotation[] annos = c.getDeclaredAnnotations();
-        for(Annotation anno : annos) {
-            System.out.println("Annotation: " + anno);
-        }
-         
+        // Annotation[] annos = c.getDeclaredAnnotations();
+        // for(Annotation anno : annos) {
+        //     System.out.println("Annotation: " + anno);
+        // } 
     }
  
 }
