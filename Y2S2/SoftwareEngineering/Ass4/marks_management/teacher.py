@@ -11,26 +11,26 @@ class TeacherDB:
         self.cursor.execute("""CREATE TABLE IF NOT EXISTS
             teachers
             (
-                id TEXT INTEGER PRIMARY KEY,
+                id INTEGER PRIMARY KEY,
+                email TEXT UNIQUE,
                 password TEXT NOT NULL,
                 first_name TEXT,
                 last_name TEXT,
-                email TEXT UNIQUE,
                 phoneNo TEXT
             )
             """)
         self.connection.commit()
     
-    def add_teacher(self, password, first_name, last_name, email, phoneNo):
+    def add_teacher(self, email: str, password: str, first_name: str, last_name: str, phoneNo: str):
         try:
-            self.cursor.execute("INSERT INTO teachers (password, first_name, last_name, email, phoneNo) VALUES (?, ?, ?, ?, ?)",
-                                (password, first_name, last_name, email, phoneNo))
+            self.cursor.execute("INSERT INTO teachers (email, password, first_name, last_name, phoneNo) VALUES (?, ?, ?, ?, ?)",
+                                (email, password, first_name, last_name, phoneNo))
             self.connection.commit()
             print("Teacher added successfully.")
         except sqlite3.IntegrityError:
             print("Email already exists. Please provide unique details.")
 
-    def update_teacher(self, id, new_email, new_phoneNo):
+    def update_teacher(self, id: int, new_email: str, new_phoneNo: str):
         try:
             self.cursor.execute("UPDATE teachers SET email=?, phoneNo=? WHERE id=?",
                                 (new_email, new_phoneNo, id))
@@ -39,9 +39,9 @@ class TeacherDB:
         except sqlite3.Error as e:
             print("Error occurred:", e)
 
-    def remove_teacher(self, id):
+    def remove_teacher(self, id: int):
         try:
-            self.cursor.execute("DELETE FROM teachers WHERE id=?", (id))
+            self.cursor.execute("DELETE FROM teachers WHERE id=?", (id,))
             self.connection.commit()
             print("Teacher removed successfully.")
         except sqlite3.Error as e:

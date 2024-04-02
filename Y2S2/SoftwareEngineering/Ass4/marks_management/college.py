@@ -11,16 +11,16 @@ class SubjectDB:
         self.cursor.execute("""CREATE TABLE IF NOT EXISTS
             subjects
             (
-                subjectId INTEGER PRIMARY KEY,
-                subjectName TEXT UNIQUE NOT NULL
+                subject_id INTEGER PRIMARY KEY,
+                subject_name TEXT UNIQUE NOT NULL
             )
             """)
         self.connection.commit()
     
-    def add_subject(self, subjectName):
+    def add_subject(self, subject_name: str):
         try:
-            self.cursor.execute("INSERT INTO subjects (subjectName) VALUES (?)",
-                                (subjectName))
+            self.cursor.execute("INSERT INTO subjects (subject_name) VALUES (?)",
+                                (subject_name,))
             self.connection.commit()
             print("Subject added successfully.")
         except sqlite3.IntegrityError:
@@ -50,7 +50,7 @@ class GradeDB:
             """)
         self.connection.commit()
     
-    def add_grade(self, grade, lower_bound, upper_bound):
+    def add_grade(self, grade: str, lower_bound: int, upper_bound: int):
         try:
             self.cursor.execute("INSERT INTO grades (grade, lower_bound, upper_bound) VALUES (?, ?, ?)",
                                 (grade, lower_bound, upper_bound))

@@ -12,16 +12,17 @@ class StudentDB:
             students
             (
                 rollNo INTEGER PRIMARY KEY,
+                email TEXT UNIQUE,
                 password TEXT NOT NULL,
                 first_name TEXT NOT NULL,
                 last_name TEXT,
-                email TEXT UNIQUE,
                 phoneNo TEXT
             )
             """)
         self.connection.commit()
+        
     
-    def add_student(self, password, first_name, last_name, email, phoneNo):
+    def add_student(self, email: str, password: str, first_name: str, last_name: str, phoneNo: str):
         try:
             self.cursor.execute("INSERT INTO students (password, first_name, last_name, email, phoneNo) VALUES (?, ?, ?, ?, ?)",
                                 (password, first_name, last_name, email, phoneNo))
@@ -30,7 +31,7 @@ class StudentDB:
         except sqlite3.IntegrityError:
             print("Email already exists. Please provide unique details.")
 
-    def update_student(self, rollNo, new_email, new_phoneNo):
+    def update_student(self, rollNo: int, new_email: str, new_phoneNo: str):
         try:
             self.cursor.execute("UPDATE students SET email=?, phoneNo=? WHERE rollNo=?",
                                 (new_email, new_phoneNo, rollNo))
@@ -39,7 +40,7 @@ class StudentDB:
         except sqlite3.Error as e:
             print("Error occurred:", e)
 
-    def remove_student(self, rollNo):
+    def remove_student(self, rollNo: int):
         try:
             self.cursor.execute("DELETE FROM students WHERE rollNo=?", (rollNo,))
             self.connection.commit()
@@ -82,7 +83,7 @@ class MarkDB:
         self.cursor.execute(f"ATTACH DATABASE '{self.college_db_path}' AS college")
         self.connection.commit()
 
-    def calculateGrade(self, mark):
+    def calculateGrade(self, mark: int):
         try:
             self.cursor.execute(f"SELECT grade FROM {self.grades_table_name} WHERE ? >= lower_bound AND ? <= upper_bound",
                                 (mark, mark))
@@ -96,7 +97,7 @@ class MarkDB:
             print("Error occurred while calculating grade:", e)
             return None
 
-    def add_mark(self, rollNo, subject_id, mark):
+    def add_mark(self, rollNo: int, subject_id: int, mark: int):
         try:
             grade = self.calculateGrade(mark)
             self.cursor.execute("INSERT INTO marks VALUES(?, ?, ?, ?)",
@@ -106,7 +107,7 @@ class MarkDB:
         except sqlite3.Error as e:
             print("Error occurred:", e)
     
-    def update_mark(self, rollNo, subject_id, mark):
+    def update_mark(self, rollNo: int, subject_id: int, mark: int):
         try:
             grade = self.calculateGrade(mark)
             self.cursor.execute("UPDATE marks SET mark=?, grade=? WHERE rollNo=? AND subject_id=?",
@@ -120,6 +121,8 @@ class MarkDB:
         self.connection.close()
 
 
+
+'''
 class ResultDB:
     def __init__(self, db_path='./database/students.db'):
         self.db_path = db_path
@@ -147,3 +150,4 @@ class ResultDB:
 
     def close_connection(self):
         self.connection.close()
+'''
