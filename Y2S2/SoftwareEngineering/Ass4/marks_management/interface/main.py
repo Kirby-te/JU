@@ -201,8 +201,39 @@ def teacher_login_page():
 def registration_page():
     
     def formard_to_welcome_page():
-        registration_page_fr.destroy()
-        welcome_page()
+        ans = conformation_box(message='Leave Registration Form?')
+        if ans:
+            registration_page_fr.destroy()
+            root.update()
+            welcome_page()
+    
+    def check_input_validation():
+        if email_ent.get() == '':
+            # email_ent.config(highlightcolor='red', highlightbackground='red')
+            email_ent.focus()
+            message_box(message='Email Required')
+            return
+        if password_ent.get() == '':
+            # password_ent.config(highlightcolor='red', highlightbackground='red')
+            password_ent.focus()
+            message_box(message='Password Required')
+            return
+        if first_name_ent.get() == '':
+            # first_name_ent.config(highlightcolor='red', highlightbackground='red')
+            first_name_ent.focus()
+            message_box(message='Name Required')
+            return
+        if phone_number_ent.get() == '':
+            # phone_number_ent.config(highlightcolor='red', highlightbackground='red')
+            phone_number_ent.focus()
+            message_box(message='Phone Number Required')
+            return
+        if user_type_var.get() == '':
+            # user_type_radio_button1.config(highlightcolor='red', highlightbackground='red')
+            user_type_radio_button1.focus()
+            message_box(message='Slecet User Type')
+            return
+        
         
     def register():
         # Implement registration logic here
@@ -212,13 +243,15 @@ def registration_page():
         first_name = first_name_ent.get()
         last_name = last_name_ent.get()
         phone_number = phone_number_ent.get()
-        user_type = user_type_var.get()
+        # user_type = user_type_var.get()
         print("Email:", email)
         print("Password:", password)
         print("First Name:", first_name)
         print("Last Name:", last_name)
         print("Phone Number:", phone_number)
-        print("User Type:", user_type)
+        # print("User Type:", user_type)
+        
+    user_type_var = StringVar()
         
     registration_page_fr = Frame(root, highlightbackground=bg_color, highlightthickness=3)
 
@@ -229,50 +262,108 @@ def registration_page():
     back_btn = Button(registration_page_fr, text='back', bg=bg_color,
                       fg='white', font=('Bold', 18), command=formard_to_welcome_page)
     back_btn.place(x=10, y=40)
-
+    
+    ## student or teacher
+    user_type_radio_button1 = Radiobutton(registration_page_fr, text='Student', font=('Bold', 12),
+                                          variable=user_type_var, value='student')
+    user_type_radio_button1.place(x = 100, y = 70)
+    user_type_radio_button2 = Radiobutton(registration_page_fr, text='Teacher', font=('Bold', 12),
+                                          variable=user_type_var, value='teacher')
+    user_type_radio_button2.place(x = 200, y = 70)
+    user_type_var.set('student')
+  
+    ent_gap = 30
+    field_gap = 70
+    start = 100
+    
     email_lb = Label(registration_page_fr, text='Email', font=('Bold', 15), fg=bg_color)
-    email_lb.place(x=100, y=100)
+    email_lb.place(x=100, y=start)
     email_ent = Entry(registration_page_fr, font=('Bold', 15),
-                      justify=CENTER, highlightcolor=bg_color,
+                      highlightcolor=bg_color,
                       highlightbackground='grey', highlightthickness=2)
-    email_ent.place(x=100, y=140)
+    email_ent.place(x=100, y=(start + ent_gap))
 
     password_lb = Label(registration_page_fr, text='Password', font=('Bold', 15), fg=bg_color)
-    password_lb.place(x=100, y=190)
+    password_lb.place(x=100, y=(start + field_gap))
     password_ent = Entry(registration_page_fr, font=('Bold', 15),
-                         justify=CENTER, show='*', highlightcolor=bg_color,
+                         show='*', highlightcolor=bg_color,
                          highlightbackground='grey', highlightthickness=2)
-    password_ent.place(x=100, y=230)
+    password_ent.place(x=100, y=(start + field_gap )+ ent_gap)
 
     first_name_lb = Label(registration_page_fr, text='First Name', font=('Bold', 15), fg=bg_color)
-    first_name_lb.place(x=100, y=280)
+    first_name_lb.place(x=100, y=(start + field_gap * 2))
     first_name_ent = Entry(registration_page_fr, font=('Bold', 15),
-                           justify=CENTER, highlightcolor=bg_color,
+                           highlightcolor=bg_color,
                            highlightbackground='grey', highlightthickness=2)
-    first_name_ent.place(x=100, y=320)
+    first_name_ent.place(x=100, y=(start + field_gap*2 + ent_gap))
 
     last_name_lb = Label(registration_page_fr, text='Last Name', font=('Bold', 15), fg=bg_color)
-    last_name_lb.place(x=100, y=370)
+    last_name_lb.place(x=100, y=(start + field_gap*3))
     last_name_ent = Entry(registration_page_fr, font=('Bold', 15),
-                          justify=CENTER, highlightcolor=bg_color,
+                          highlightcolor=bg_color,
                           highlightbackground='grey', highlightthickness=2)
-    last_name_ent.place(x=100, y=410)
+    last_name_ent.place(x=100, y=(start + field_gap*3 + ent_gap))
 
     phone_number_lb = Label(registration_page_fr, text='Phone Number', font=('Bold', 15), fg=bg_color)
-    phone_number_lb.place(x=100, y=460)
+    phone_number_lb.place(x=100, y=(start + field_gap*4))
     phone_number_ent = Entry(registration_page_fr, font=('Bold', 15),
-                          justify=CENTER, highlightcolor=bg_color,
+                          highlightcolor=bg_color,
                           highlightbackground='grey', highlightthickness=2)
-    last_name_ent.place(x=100, y=510)
+    phone_number_ent.place(x=100, y=(start + field_gap*4 + ent_gap))
 
-    login_btn = Button(registration_page_fr, text='Login', font=('Bold', 15),
-                    bg=bg_color, fg='white')
-    login_btn.place(x=180, y=320, height=40)
+    submit_btn = Button(registration_page_fr, text='Submit', font=('Bold', 15),
+                    bg=bg_color, fg='white', command=check_input_validation)
+    submit_btn.place(x=180, y=(start + field_gap*5), height=40)
 
 
     registration_page_fr.pack(pady=30)
     registration_page_fr.pack_propagate(False)
     registration_page_fr.configure(width=460, height=552)
+    
+def conformation_box(message):
+    
+    answer = BooleanVar()
+    answer.set(False)
+    
+    def action(ans):
+        answer.set(ans)
+        conformation_box_fr.destroy()
+    
+    conformation_box_fr = Frame(root, highlightbackground=bg_color,
+                                highlightthickness=3)
+    message_lb = Label(conformation_box_fr, text=message, font=('Bold', 15),
+                       justify=CENTER)
+    message_lb.pack(pady=20)
+    
+    cancel_btn = Button(conformation_box_fr, text="Cancel", font=('Bold',15),
+                        bd=0, bg=bg_color, fg='white',
+                        command=lambda: action(False))
+    cancel_btn.place(x=50, y=160)
+    
+    yes_btn = Button(conformation_box_fr, text="Yes", font=('Bold',15),
+                        bd=0, bg=bg_color, fg='white',
+                        command=lambda: action(True))
+    yes_btn.place(x=190, y=160)
+    
+    conformation_box_fr.place(x=100, y=120, width=320, height=220)
+    
+    root.wait_window(conformation_box_fr)
+    return answer.get()
+
+def message_box(message):
+    message_box_fr = Frame(root, highlightbackground=bg_color,
+                                highlightthickness=3)
+    message_lb = Label(message_box_fr, text=message, font=('Bold', 15),
+                       justify=CENTER)
+    message_lb.pack(pady=50)
+    
+    close_btn = Button(message_box_fr, text="X", font=('Bold',13),
+                        bd=0, fg=bg_color, command=lambda: message_box_fr.destroy())
+    close_btn.place(x=270, y=5)
+    
+    message_box_fr.place(x=100, y=120, width=320, height=220)
+    
+    root.wait_window(message_box_fr)
 
 welcome_page()
 root.mainloop()
