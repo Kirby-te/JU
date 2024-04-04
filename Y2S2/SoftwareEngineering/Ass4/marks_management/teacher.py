@@ -14,36 +14,38 @@ class TeacherDB:
                 id INTEGER PRIMARY KEY,
                 email TEXT UNIQUE,
                 password TEXT NOT NULL,
-                first_name TEXT,
+                first_name TEXT NOT NULL,
                 last_name TEXT,
                 phoneNo TEXT
             )
             """)
         self.connection.commit()
     
-    def add_teacher(self, email: str, password: str, first_name: str, last_name: str, phoneNo: str):
+    def add_teacher(self, email: str, password: str, first_name: str, last_name: str, phoneNo: str) -> str:
+        if (not email) or (not password) or (not first_name):
+            return "One or more fields, entered are blanks."
         try:
             self.cursor.execute("INSERT INTO teachers (email, password, first_name, last_name, phoneNo) VALUES (?, ?, ?, ?, ?)",
                                 (email, password, first_name, last_name, phoneNo))
             self.connection.commit()
-            print("Teacher added successfully.")
+            return "Teacher added successfully.\nLogin with Email."
         except sqlite3.IntegrityError:
-            print("Email already exists. Please provide unique details.")
+            return "Email already exists.\nPlease provide unique details."
 
-    def update_teacher(self, id: int, new_email: str, new_phoneNo: str):
+    def update_teacher(self, id: int, new_email: str, new_phoneNo: str) -> str:
         try:
             self.cursor.execute("UPDATE teachers SET email=?, phoneNo=? WHERE id=?",
                                 (new_email, new_phoneNo, id))
             self.connection.commit()
-            print("Teacher updated successfully.")
+            return "Teacher updated successfully."
         except sqlite3.Error as e:
             print("Error occurred:", e)
 
-    def remove_teacher(self, id: int):
+    def remove_teacher(self, id: int) -> str:
         try:
             self.cursor.execute("DELETE FROM teachers WHERE id=?", (id,))
             self.connection.commit()
-            print("Teacher removed successfully.")
+            return "Teacher removed successfully."
         except sqlite3.Error as e:
             print("Error occurred:", e)
 

@@ -17,14 +17,16 @@ class SubjectDB:
             """)
         self.connection.commit()
     
-    def add_subject(self, subject_name: str):
+    def add_subject(self, subject_name: str) -> str:
+        if not subject_name:
+            return "One or more fields, entered are blanks."
         try:
             self.cursor.execute("INSERT INTO subjects (subject_name) VALUES (?)",
                                 (subject_name,))
             self.connection.commit()
-            print("Subject added successfully.")
+            return "Subject added successfully."
         except sqlite3.IntegrityError:
-            print("Subejct already exists. Please provide unique deatils.")
+            return "Subejct already exists.\nPlease provide unique deatils."
             
     def close_connection(self):
         self.connection.close()
@@ -50,14 +52,16 @@ class GradeDB:
             """)
         self.connection.commit()
     
-    def add_grade(self, grade: str, lower_bound: int, upper_bound: int):
+    def add_grade(self, grade: str, lower_bound: int, upper_bound: int) -> str:
+        if (not grade) or (not lower_bound) or (not upper_bound):
+            return "One or more fields, entered are blanks."
         try:
             self.cursor.execute("INSERT INTO grades (grade, lower_bound, upper_bound) VALUES (?, ?, ?)",
                                 (grade, lower_bound, upper_bound))
             self.connection.commit()
-            print("Grade added successfully.")
+            return "Grade added successfully."
         except sqlite3.IntegrityError:
-            print("Grade already exists. Please provide unique details.")
+            return "Grade already exists.\nPlease provide unique details."
             
     def close_connection(self):
         self.connection.close()

@@ -1,6 +1,7 @@
 from util import *
 from conformationBox import conformation_box
 from messageBox import message_box
+import student, teacher
 
 def registration_page(root: Tk):
     
@@ -11,17 +12,17 @@ def registration_page(root: Tk):
             root.update()
             return
     
-    def check_input_validation():
+    def check_input_validation() -> bool:
         if email_ent.get() == '':
             # email_ent.config(highlightcolor='red', highlightbackground='red')
             email_ent.focus()
             message_box(root, message='Email Required')
-            return
+            return False
         if not check_email(email=email_ent.get().lower()):
             # email_ent.config(highlightcolor='red', highlightbackground='red')
             email_ent.focus()
             message_box(root, message='Enter a Valid Email')
-            return
+            return False
         if password_ent.get() == '':
             # password_ent.config(highlightcolor='red', highlightbackground='red')
             password_ent.focus()
@@ -31,34 +32,46 @@ def registration_page(root: Tk):
             # first_name_ent.config(highlightcolor='red', highlightbackground='red')
             first_name_ent.focus()
             message_box(root, message='Name Required')
-            return
-        if phone_number_ent.get() == '':
-            # phone_number_ent.config(highlightcolor='red', highlightbackground='red')
-            phone_number_ent.focus()
-            message_box(root, message='Phone Number Required')
-            return
+            return False
         if user_type_var.get() == '':
             # user_type_radio_button1.config(highlightcolor='red', highlightbackground='red')
             user_type_radio_button1.focus()
             message_box(root, message='Slecet User Type')
-            return
+            return False
+        return True
         
         
     def register():
-        # Implement registration logic here
-        # Retrieve data from entry fields and radio buttons
         email = email_ent.get()
         password = password_ent.get()
         first_name = first_name_ent.get()
         last_name = last_name_ent.get()
         phone_number = phone_number_ent.get()
-        # user_type = user_type_var.get()
-        print("Email:", email)
-        print("Password:", password)
-        print("First Name:", first_name)
-        print("Last Name:", last_name)
-        print("Phone Number:", phone_number)
-        # print("User Type:", user_type)
+        user_type = user_type_var.get()
+        user_message = ''
+        
+        if user_type == 'student':
+            stud = student.StudentDB()
+            user_message = stud.add_student(email, password, first_name, last_name, phone_number)
+            message_box(root, user_message)
+            stud.close_connection()
+        
+        if user_type == 'teacher':
+            teac = teacher.TeacherDB()
+            user_message = teac.add_teacher(email, password, first_name, last_name, phone_number)
+            message_box(root, user_message)
+            teac.close_connection()
+        
+        if 'added' in user_message.lower():
+                registration_page_fr.destroy()
+                root.update()
+                return
+    
+    
+    def execute():
+        if check_input_validation():
+            register()
+    
         
     user_type_var = StringVar()
         
@@ -121,7 +134,7 @@ def registration_page(root: Tk):
     phone_number_ent.place(x=100, y=(start + field_gap*4 + ent_gap))
 
     submit_btn = Button(registration_page_fr, text='Submit', font=('Bold', 15),
-                    bg=bg_color, fg='white', command=check_input_validation)
+                    bg=bg_color, fg='white', command=execute)
     submit_btn.place(x=180, y=(start + field_gap*5), height=40)
 
 
