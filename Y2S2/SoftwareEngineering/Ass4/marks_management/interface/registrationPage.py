@@ -17,6 +17,11 @@ def registration_page(root: Tk):
             email_ent.focus()
             message_box(root, message='Email Required')
             return
+        if not check_email(email=email_ent.get().lower()):
+            # email_ent.config(highlightcolor='red', highlightbackground='red')
+            email_ent.focus()
+            message_box(root, message='Enter a Valid Email')
+            return
         if password_ent.get() == '':
             # password_ent.config(highlightcolor='red', highlightbackground='red')
             password_ent.focus()

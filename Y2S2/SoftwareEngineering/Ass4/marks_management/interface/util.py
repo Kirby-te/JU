@@ -2,14 +2,15 @@ import sys
 sys.path.append("../marks_management")
 
 from tkinter import *
+import re
 
 bg_color = '#A020F0'
 image_width = 40
 image_height = 50
 
-# # loading images
-# logo_icon = PhotoImage(file='assets/logo.png')
-# student_icon = PhotoImage(file='assets/student_icon.png')
-# teacher_icon = PhotoImage(file='assets/teacher_icon.png')
-# admin_icon = PhotoImage(file='assets/admin_icon.png')
-# register_icon = PhotoImage(file='assets/register_icon.png')
+def check_email(email: str) -> bool:
+    pattern = r"^[a-z](\.[a-z0-9]+)*@([a-z0-9]+)+(\.[a-z]{2,4})$"
+    
+    match = re.match(pattern=pattern, string=email)
+    
+    return bool(match)
