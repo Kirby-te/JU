@@ -48,6 +48,29 @@ class TeacherDB:
             return "Teacher removed successfully."
         except sqlite3.Error as e:
             print("Error occurred:", e)
+            
+    def email_exists(self, email: str) -> bool:
+        self.cursor.execute("SELECT * FROM teachers WHERE email=?", (email,))
+        if self.cursor.fetchone():
+            return True
+        else:
+            return False
+
+    def id_exists(self, id: int) -> bool:
+        self.cursor.execute("SELECT * FROM teachers WHERE id=?", (id,))
+        if self.cursor.fetchone():
+            return True
+        else:
+            return False
+        
+    def get_password(self, identifier: str) -> str:
+        query = "SELECT password FROM teachers WHERE email = ? OR id = ?"
+        self.cursor.execute(query, (identifier, identifier))
+        result = self.cursor.fetchone()
+        if result:
+            return result[0]
+        else:
+            return None
 
     def close_connection(self):
         self.connection.close()

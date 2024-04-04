@@ -1,4 +1,6 @@
 from util import *
+import student
+from messageBox import message_box
 
 def student_login_page(root: Tk):
     
@@ -6,6 +8,29 @@ def student_login_page(root: Tk):
         student_login_page_fr.destroy()
         root.update()
         return
+    
+    def login():
+        identifier = id_number_ent.get()
+        password = password_ent.get()
+        stud = student.StudentDB()
+        
+        id_info = stud.roll_exists(rollNo=identifier)
+        if not id_info:
+            id_info = stud.email_exists(email=identifier)
+        
+        if not id_info:
+            message_box(root, 'Incorrect Id')
+            return
+        
+        retrieved_password = stud.get_password(identifier=identifier)
+
+        if retrieved_password != password:
+            message_box(root, 'Incorrect Password!')
+            return
+    
+        student_login_page_fr.destroy()
+        root.update()
+        # redirect
         
     student_login_page_fr = Frame(root, highlightbackground=bg_color, highlightthickness=3)
 
@@ -32,7 +57,7 @@ def student_login_page(root: Tk):
     password_ent.place(x=100, y=270)
 
     login_btn = Button(student_login_page_fr, text='Login', font=('Bold', 15),
-                    bg=bg_color, fg='white')
+                    bg=bg_color, fg='white', command=login)
     login_btn.place(x=180, y=320, height=40)
 
 
