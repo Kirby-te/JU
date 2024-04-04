@@ -1,5 +1,4 @@
 from util import *
-from messageBox import message_box
 import college
 
 def admin_login_page(root: Tk):

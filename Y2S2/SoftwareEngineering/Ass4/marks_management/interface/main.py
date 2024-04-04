@@ -1,5 +1,5 @@
 from util import *
-from welcomePage import welcome_page 
+from interface.pages.welcomePage import welcome_page 
 
 root = Tk()
 root.title("Marks Management System")

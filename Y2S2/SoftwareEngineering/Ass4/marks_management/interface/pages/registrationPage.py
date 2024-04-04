@@ -1,6 +1,4 @@
 from util import *
-from conformationBox import conformation_box
-from messageBox import message_box
 import student, teacher
 
 def registration_page(root: Tk):

@@ -1,5 +1,4 @@
 from util import *
-from messageBox import message_box
 import teacher
 
 def teacher_login_page(root: Tk):

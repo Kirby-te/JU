@@ -1,8 +1,8 @@
 from util import *
-from adminLoginPage import admin_login_page
-from studentLoginPage import student_login_page
-from teacherLoginPage import teacher_login_page
-from registrationPage import registration_page
+from interface.pages.adminLoginPage import admin_login_page
+from interface.pages.studentLoginPage import student_login_page
+from interface.pages.teacherLoginPage import teacher_login_page
+from interface.pages.registrationPage import registration_page
 
 def welcome_page(root: Tk):
     
