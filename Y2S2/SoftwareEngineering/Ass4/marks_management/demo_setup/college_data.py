@@ -1,10 +1,14 @@
 import sys
 sys.path.append('../marks_management')
 
-from college import SubjectDB, GradeDB
+from college import AdminDB, SubjectDB, GradeDB
 
+admin = AdminDB()
 subject = SubjectDB()
 grade = GradeDB()
+
+admin.add_admin("admin@edu.in", "admin1234")
+admin.close_connection()
 
 subjects = ["OOS", "SE", "GGM", "Math", "CN", "GT"]
 for sub in subjects:
