@@ -1,5 +1,6 @@
 from util import *
 from teacher import TeacherDB
+from college import SubjectDB
 
 bg_color_option='#c3c3c3'
 
@@ -10,6 +11,9 @@ def teacher_dashboard(root: Tk, identifier: str):
     user = teac.get_details(identifier)
     print(user)
     teac.close_connection()
+    sub = SubjectDB()
+    subject_name = sub.get_subject_name(user[6])
+    sub.close_connection()
     
     def update_user():
         global user
@@ -52,7 +56,7 @@ def teacher_dashboard(root: Tk, identifier: str):
         hi_lb.place(x=130, y=50)
         
         details_lb = Label(home_page_fr,
-                           text='''Email : {}\n\nId : {}\n\nName : {}\n\nPhone No. : {}'''.format(user[1], user[0], user[3] + " " + user[4], user[5]),
+                           text='''Email : {}\n\nId : {}\n\nName : {}\n\nPhone No. : {}\n\nSubject : {}'''.format(user[1], user[0], user[3] + " " + user[4], user[5], subject_name),
                            font=('Bold', 13), justify=LEFT)
         details_lb.place(x=20, y=130)
         

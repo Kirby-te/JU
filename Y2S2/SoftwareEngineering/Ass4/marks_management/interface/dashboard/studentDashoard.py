@@ -1,5 +1,6 @@
 from util import *
-from student import StudentDB
+from student import StudentDB, MarkDB
+from college import SubjectDB
 
 bg_color_option='#c3c3c3'
 
@@ -58,11 +59,44 @@ def student_dashboard(root: Tk, identifier: str):
         
         home_page_fr.pack(fill=BOTH, expand=True)
         
-    def details_page():
-        details_page_fr = Frame(pages_fr)
-        details_page_lb = Label(details_page_fr, text='Details Page', font=('Bold', 15))
-        details_page_lb.place(x=100, y=200)
-        details_page_fr.pack(fill=BOTH, expand=True)
+    def marks_page():
+        marks_page_fr = Frame(pages_fr)
+        
+        
+        marks_title_lb = Label(marks_page_fr, text='Mark Sheet', font=('Bold', 20), justify=CENTER)
+        marks_title_lb.place(x=100, y=30)
+        
+        subject_name_lb = Label(marks_page_fr, text='Subjects', font=('Bold', 17))
+        subject_name_lb.place(x=5, y=100)
+        
+        subject_marks_lb = Label(marks_page_fr, text='Score', font=('Bold', 17))
+        subject_marks_lb.place(x=150, y=100)
+        
+        subject_grade_lb = Label(marks_page_fr, text='Grade', font=('Bold', 17))
+        subject_grade_lb.place(x=270, y=100)
+        
+        marks = MarkDB()
+        subs = SubjectDB()
+        
+        gap = 60
+        
+        for i in range(1, 7):
+            subject = subs.get_subject_name(i)
+            mark = marks.get_mark(user[0], i)
+            grade = marks.get_grade(user[0], i)
+            
+            subject_name_lb_i = Label(marks_page_fr, text=f'{subject}', font=('Bold', 15))
+            subject_name_lb_i.place(x=20, y=100+gap)
+            
+            subject_marks_lb_i = Label(marks_page_fr, text=f'{mark}', font=('Bold', 15))
+            subject_marks_lb_i.place(x=165, y=100+gap)
+            
+            subject_grade_lb_i = Label(marks_page_fr, text=f'{grade}', font=('Bold', 15))
+            subject_grade_lb_i.place(x=290, y=100+gap)
+            
+            gap += 40
+        
+        marks_page_fr.pack(fill=BOTH, expand=True)
         
     def security_page():
         
@@ -205,7 +239,7 @@ def student_dashboard(root: Tk, identifier: str):
     home_btn.config(highlightbackground=bg_color, highlightthickness=1)
     home_page()
     
-    details_btn = Button(options_fr, text='Details', font=('Bold', 15), fg=bg_color, bg=bg_color_option, highlightbackground=bg_color_option, bd=0, justify=LEFT, command=lambda: on_click_option(details_btn, details_page))
+    details_btn = Button(options_fr, text='Marks', font=('Bold', 15), fg=bg_color, bg=bg_color_option, highlightbackground=bg_color_option, bd=0, justify=LEFT, command=lambda: on_click_option(details_btn, marks_page))
     details_btn.place(x=4, y=120)
     
     security_btn = Button(options_fr, text='Security', font=('Bold', 15), fg=bg_color, bg=bg_color_option, highlightbackground=bg_color_option, bd=0, command=lambda: on_click_option(security_btn, security_page))

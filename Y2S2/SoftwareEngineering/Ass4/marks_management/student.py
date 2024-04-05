@@ -235,8 +235,17 @@ class MarkDB:
         except sqlite3.Error as e:
             print("Error occurred:", e)
         
-    def get_grade(self, rollNo: int, subject_id: int) -> int:
+    def get_grade(self, rollNo: int, subject_id: int) -> str:
         query = "SELECT grade FROM marks WHERE rollNo = ? AND subject_id = ?"
+        self.cursor.execute(query, (rollNo, subject_id))
+        
+        grade = self.cursor.fetchall()
+        if grade:
+            return grade[0][0]
+        return []
+    
+    def get_mark(self, rollNo: int, subject_id: int) -> int:
+        query = "SELECT mark FROM marks WHERE rollNo = ? AND subject_id = ?"
         self.cursor.execute(query, (rollNo, subject_id))
         
         grade = self.cursor.fetchall()
