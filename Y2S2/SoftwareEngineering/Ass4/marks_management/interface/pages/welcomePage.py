@@ -8,27 +8,31 @@ def welcome_page(root: Tk):
     
     def formard_to_admin_login():
         welcome_page_fr.destroy()
-        root.update()
         admin_login_page(root)
+        root.update()
         welcome_page(root)
+        return
     
     def formard_to_student_login():
         welcome_page_fr.destroy()
-        root.update()
         student_login_page(root)
+        root.update()
         welcome_page(root)
+        return
         
     def formard_to_teacher_login():
         welcome_page_fr.destroy()
-        root.update()
         teacher_login_page(root)
+        root.update()
         welcome_page(root)
+        return
             
     def formard_to_register_page():
         welcome_page_fr.destroy()
-        root.update()
         registration_page(root)
+        root.update()
         welcome_page(root)
+        return
         
     welcome_page_fr = Frame(root, highlightbackground=bg_color, highlightthickness=3)
 

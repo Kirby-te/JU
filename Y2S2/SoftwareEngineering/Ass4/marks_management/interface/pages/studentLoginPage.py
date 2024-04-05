@@ -1,5 +1,6 @@
 from util import *
 import student
+from interface.dashboard.studentDashoard import student_dashboard
 
 def student_login_page(root: Tk):
     
@@ -18,7 +19,7 @@ def student_login_page(root: Tk):
             id_info = stud.email_exists(email=identifier)
         
         if not id_info:
-            message_box(root, 'Incorrect Id')
+            message_box(root, 'Incorrect Id!')
             return
         
         retrieved_password = stud.get_password(identifier=identifier)
@@ -26,10 +27,12 @@ def student_login_page(root: Tk):
         if retrieved_password != password:
             message_box(root, 'Incorrect Password!')
             return
-    
+
+        stud.close_connection()
         student_login_page_fr.destroy()
+        student_dashboard(root, identifier)
         root.update()
-        # redirect
+        return
         
     student_login_page_fr = Frame(root, highlightbackground=bg_color, highlightthickness=3)
 

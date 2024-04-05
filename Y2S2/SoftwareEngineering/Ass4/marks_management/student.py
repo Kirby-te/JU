@@ -33,14 +33,44 @@ class StudentDB:
         except sqlite3.IntegrityError:
             return "Email already exists.\nPlease provide unique details."
 
-    def update_student(self, rollNo: int, new_email: str, new_phoneNo: str) -> str:
+    def update_student(self, rollNo: int, new_email: str = None, new_password: str = None, new_first_name: str = None, new_last_name: str = None, new_phoneNo: str = None) -> str:
         try:
-            self.cursor.execute("UPDATE students SET email=?, phoneNo=? WHERE rollNo=?",
-                                (new_email, new_phoneNo, rollNo))
+            query = "UPDATE students SET "
+            params = []
+            
+            if new_email is not None:
+                query += "email=?, "
+                params.append(new_email)
+            
+            if new_phoneNo is not None:
+                query += "phoneNo=?, "
+                params.append(new_phoneNo)
+            
+            if new_password is not None:
+                query += "password=?, "
+                params.append(new_password)
+            
+            if new_first_name is not None:
+                query += "first_name=?, "
+                params.append(new_first_name)
+            
+            if new_last_name is not None:
+                query += "last_name=?, "
+                params.append(new_last_name)
+            
+            query = query.rstrip(", ")
+            
+            query += " WHERE rollNo=?"
+            params.append(rollNo)
+            
+            self.cursor.execute(query, tuple(params))
             self.connection.commit()
-            return "Student updated successfully."
+            
+            return "Updated successfully."
+        
         except sqlite3.Error as e:
             print("Error occurred:", e)
+            return "Error occurred while updating student."
 
     def remove_student(self, rollNo: int) -> str:
         try:
@@ -72,6 +102,15 @@ class StudentDB:
             return result[0]
         else:
             return None
+        
+    def get_details(self, identifier):
+        query = "SELECT rollNo, email, password, first_name, last_name, phoneNo FROM students WHERE email = ? OR rollNo = ?"
+        self.cursor.execute(query, (identifier, identifier))
+        
+        user = self.cursor.fetchone()
+        if user:
+            return user
+        return []
 
     def close_connection(self):
         self.connection.close()
