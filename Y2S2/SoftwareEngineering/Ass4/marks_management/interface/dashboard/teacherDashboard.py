@@ -146,8 +146,8 @@ def teacher_dashboard(root: Tk, identifier: str):
             new_ph = phone_ent.get()
             print(new_fn)
             
-            if new_fn == '' or new_ph == '':
-                message_box(root, 'First Name and Phone Number\ncan\'t be empty!')
+            if new_fn == '':
+                message_box(root, 'First Name \ncan\'t be empty!')
                 return
             
             if not conformation_box(root, 'Update?'):

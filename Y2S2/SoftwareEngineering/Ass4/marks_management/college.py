@@ -100,7 +100,43 @@ class SubjectDB:
             return "Subject added successfully."
         except sqlite3.IntegrityError:
             return "Subejct already exists.\nPlease provide unique deatils."
-            
+    
+    def subject_exists(self, subject_id: int) -> bool:
+        self.cursor.execute("SELECT * FROM subjects WHERE subject_id=?", (subject_id,))
+        if self.cursor.fetchone():
+            return True
+        else:
+            return False
+    
+    def get_subject_name(self, subject_id: int) -> str:
+        self.cursor.execute("SELECT subject_name FROM subjects WHERE subject_id=?", (subject_id,))
+        sub  = self.cursor.fetchone()
+        if sub:
+            return sub[0]
+        else:
+            return None
+        
+    def get_subjec_id(self, subject_name: str) -> int:
+        self.cursor.execute("SELECT subject_id FROM subjects WHERE subject_name=?", (subject_name,))
+        sub  = self.cursor.fetchone()
+        if sub:
+            return sub[0]
+        else:
+            return None
+        
+    def get_subject_names(self) -> list:
+        self.cursor.execute("SELECT subject_name FROM subjects")
+        subjects = self.cursor.fetchall()
+        return [sub[0] for sub in subjects]
+        
+    def drop_table(self):
+        try:
+            self.cursor.execute("DROP TABLE IF EXISTS subjects")
+            self.connection.commit()
+            print("Table 'marks' dropped successfully.")
+        except sqlite3.Error as e:
+            print("Error occurred while dropping table 'subjects':", e)
+        
     def close_connection(self):
         self.connection.close()
         
@@ -135,6 +171,14 @@ class GradeDB:
             return "Grade added successfully."
         except sqlite3.IntegrityError:
             return "Grade already exists.\nPlease provide unique details."
-            
+        
+    def drop_table(self):
+        try:
+            self.cursor.execute("DROP TABLE IF EXISTS grades")
+            self.connection.commit()
+            print("Table 'marks' dropped successfully.")
+        except sqlite3.Error as e:
+            print("Error occurred while dropping table 'grades':", e)
+
     def close_connection(self):
         self.connection.close()

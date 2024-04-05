@@ -16,7 +16,8 @@ class TeacherDB:
                 password TEXT NOT NULL,
                 first_name TEXT NOT NULL,
                 last_name TEXT,
-                phoneNo TEXT
+                phoneNo TEXT,
+                subject_id INT
             )
             """)
         self.connection.commit()
@@ -32,7 +33,7 @@ class TeacherDB:
         except sqlite3.IntegrityError:
             return "Email already exists.\nPlease provide unique details."
 
-    def update_teacher(self, id: int, new_email: str = None, new_password: str = None, new_first_name: str = None, new_last_name: str = None, new_phoneNo: str = None) -> str:
+    def update_teacher(self, id: int, new_email: str = None, new_password: str = None, new_first_name: str = None, new_last_name: str = None, new_phoneNo: str = None, subject_id: str = None) -> str:
         try:
             query = "UPDATE teachers SET "
             params = []
@@ -40,10 +41,6 @@ class TeacherDB:
             if new_email is not None:
                 query += "email=?, "
                 params.append(new_email)
-            
-            if new_phoneNo is not None:
-                query += "phoneNo=?, "
-                params.append(new_phoneNo)
             
             if new_password is not None:
                 query += "password=?, "
@@ -56,6 +53,14 @@ class TeacherDB:
             if new_last_name is not None:
                 query += "last_name=?, "
                 params.append(new_last_name)
+                
+            if new_phoneNo is not None:
+                query += "phoneNo=?, "
+                params.append(new_phoneNo)
+                
+            if subject_id is not None:
+                query += "subject_id=?, "
+                params.append(subject_id)
             
             query = query.rstrip(", ")
             
@@ -103,13 +108,21 @@ class TeacherDB:
             return None
         
     def get_details(self, identifier):
-        query = "SELECT id, email, password, first_name, last_name, phoneNo FROM teachers WHERE email = ? OR id = ?"
+        query = "SELECT id, email, password, first_name, last_name, phoneNo, subject_id FROM teachers WHERE email = ? OR id = ?"
         self.cursor.execute(query, (identifier, identifier))
         
         user = self.cursor.fetchone()
         if user:
             return user
         return []
+    
+    def drop_table(self):
+        try:
+            self.cursor.execute("DROP TABLE IF EXISTS teachers")
+            self.connection.commit()
+            print("Table 'marks' dropped successfully.")
+        except sqlite3.Error as e:
+            print("Error occurred while dropping table 'teachers':", e)
 
     def close_connection(self):
         self.connection.close()
