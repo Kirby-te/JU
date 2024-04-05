@@ -36,18 +36,43 @@ import random
 # student_db.close_connection()
 
 
-# marks = MarkDB()
 
+
+
+# marks = MarkDB()
+# stud = StudentDB()
+# rolls = stud.get_rolls()
 # # marks.add_mark(1, 1, 25)
 # # marks.remove_grade(1)
 
-# for student_roll in range(1, 21):
+# for roll in rolls:
 #     for subject_id in range(1, 7):
 #         mark = random.randint(35, 95)
-#         marks.add_mark(student_roll, subject_id, mark)
+#         marks.add_mark(roll[0], subject_id, mark)
 
+# stud.close_connection()
 # marks.close_connection()
 
+
+
+
 res = ResultDB()
-res.remove_result(1)
+# res.remove_result(1)
 # res.add_result(1, ['S', 'S', 'A', 'F', 'E', 'C'])
+
+stud = StudentDB()
+rolls = stud.get_rolls()
+# print(rolls)
+marks = MarkDB()
+
+for roll in rolls:
+    grades = []
+    for i in range (1, 7):
+        grade = marks.get_grade(roll[0], i)
+        grades.append(grade)
+    # print(roll[0], grades)
+    res.add_result(roll[0], grades)
+        
+marks.close_connection()
+stud.close_connection()
+res.close_connection()

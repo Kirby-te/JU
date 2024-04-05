@@ -112,6 +112,15 @@ class StudentDB:
             return user
         return []
     
+    def get_rolls(self):
+        query = "SELECT rollNo FROM students"
+        self.cursor.execute(query)
+        
+        users = self.cursor.fetchall()
+        if users:
+            return users
+        return []
+    
     def drop_table(self):
         try:
             self.cursor.execute("DROP TABLE IF EXISTS students")
@@ -225,6 +234,15 @@ class MarkDB:
             return "Mark changed successfully."
         except sqlite3.Error as e:
             print("Error occurred:", e)
+        
+    def get_grade(self, rollNo: int, subject_id: int) -> int:
+        query = "SELECT grade FROM marks WHERE rollNo = ? AND subject_id = ?"
+        self.cursor.execute(query, (rollNo, subject_id))
+        
+        grade = self.cursor.fetchall()
+        if grade:
+            return grade[0][0]
+        return []
             
     def remove_grade(self, rollNo: int) -> str:
         try:
@@ -309,7 +327,6 @@ class ResultDB:
             mark_placeholders = ', '.join(['?' for _ in range(len(grades))])
             gpa = self.calculate_gpa(grades)
             query = f"INSERT INTO results VALUES (?, {mark_placeholders}, ?)"
-            print(query)
             self.cursor.execute(query, [rollNo] + grades + [str(gpa)])
             self.connection.commit()
             print("Result added successfully.")

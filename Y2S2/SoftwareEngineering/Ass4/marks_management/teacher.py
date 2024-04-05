@@ -22,12 +22,12 @@ class TeacherDB:
             """)
         self.connection.commit()
     
-    def add_teacher(self, email: str, password: str, first_name: str, last_name: str, phoneNo: str) -> str:
+    def add_teacher(self, email: str, password: str, first_name: str, last_name: str = None, phoneNo: str = None, subject_id: int = None) -> str:
         if (not email) or (not password) or (not first_name):
             return "One or more fields, entered are blanks."
         try:
-            self.cursor.execute("INSERT INTO teachers (email, password, first_name, last_name, phoneNo) VALUES (?, ?, ?, ?, ?)",
-                                (email, password, first_name, last_name, phoneNo))
+            self.cursor.execute("INSERT INTO teachers (email, password, first_name, last_name, phoneNo, subject_id) VALUES (?, ?, ?, ?, ?, ?)",
+                                (email, password, first_name, last_name, phoneNo, subject_id))
             self.connection.commit()
             return "Teacher added successfully.\nLogin with Email."
         except sqlite3.IntegrityError:
