@@ -62,11 +62,15 @@ def teacher_dashboard(root: Tk, identifier: str):
         
         home_page_fr.pack(fill=BOTH, expand=True)
         
-    def details_page():
-        details_page_fr = Frame(pages_fr)
-        details_page_lb = Label(details_page_fr, text='Details Page', font=('Bold', 15))
-        details_page_lb.place(x=100, y=200)
-        details_page_fr.pack(fill=BOTH, expand=True)
+    def student_page():
+        students_page_fr = Frame(pages_fr)
+        
+        
+        students_page_lb = Label(students_page_fr, text='Details Page', font=('Bold', 15))
+        students_page_lb.place(x=100, y=200)
+        
+        
+        students_page_fr.pack(fill=BOTH, expand=True)
         
     def security_page():
         
@@ -209,8 +213,8 @@ def teacher_dashboard(root: Tk, identifier: str):
     home_btn.config(highlightbackground=bg_color, highlightthickness=1)
     home_page()
     
-    details_btn = Button(options_fr, text='Details', font=('Bold', 15), fg=bg_color, bg=bg_color_option, highlightbackground=bg_color_option, bd=0, justify=LEFT, command=lambda: on_click_option(details_btn, details_page))
-    details_btn.place(x=4, y=120)
+    students_btn = Button(options_fr, text='Student', font=('Bold', 15), fg=bg_color, bg=bg_color_option, highlightbackground=bg_color_option, bd=0, justify=LEFT, command=lambda: on_click_option(students_btn, student_page))
+    students_btn.place(x=4, y=120)
     
     security_btn = Button(options_fr, text='Security', font=('Bold', 15), fg=bg_color, bg=bg_color_option, highlightbackground=bg_color_option, bd=0, command=lambda: on_click_option(security_btn, security_page))
     security_btn.place(x=4, y=190)
