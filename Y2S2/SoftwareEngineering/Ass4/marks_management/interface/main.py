@@ -1,6 +1,7 @@
 from util import *
 from interface.pages.welcomePage import welcome_page
 from interface.dashboard.studentDashoard import student_dashboard
+from interface.dashboard.teacherDashboard import teacher_dashboard
 
 root = Tk()
 root.title("Marks Management System")
@@ -15,6 +16,7 @@ root.geometry("500x600")
 # register_icon = PhotoImage(file='assets/register_icon.png')
 
 # welcome_page(root)
-student_dashboard(root, 2)
+# student_dashboard(root, 2)
+teacher_dashboard(root, 2)
 
 root.mainloop()

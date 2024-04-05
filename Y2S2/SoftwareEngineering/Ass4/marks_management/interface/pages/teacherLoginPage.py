@@ -1,5 +1,6 @@
 from util import *
 import teacher
+from interface.dashboard.teacherDashboard import teacher_dashboard
 
 def teacher_login_page(root: Tk):
     
@@ -26,10 +27,13 @@ def teacher_login_page(root: Tk):
         if retrieved_password != password:
             message_box(root, 'Incorrect Password!')
             return
-    
+
+        teach.close_connection()
         teacher_login_page_fr.destroy()
         root.update()
-        # redirect
+        teacher_dashboard(root, identifier)
+        root.update()
+        return
 
     teacher_login_page_fr = Frame(root, highlightbackground=bg_color, highlightthickness=3)
 

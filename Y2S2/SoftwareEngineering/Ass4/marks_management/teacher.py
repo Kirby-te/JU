@@ -32,14 +32,44 @@ class TeacherDB:
         except sqlite3.IntegrityError:
             return "Email already exists.\nPlease provide unique details."
 
-    def update_teacher(self, id: int, new_email: str, new_phoneNo: str) -> str:
+    def update_teacher(self, id: int, new_email: str = None, new_password: str = None, new_first_name: str = None, new_last_name: str = None, new_phoneNo: str = None) -> str:
         try:
-            self.cursor.execute("UPDATE teachers SET email=?, phoneNo=? WHERE id=?",
-                                (new_email, new_phoneNo, id))
+            query = "UPDATE teachers SET "
+            params = []
+            
+            if new_email is not None:
+                query += "email=?, "
+                params.append(new_email)
+            
+            if new_phoneNo is not None:
+                query += "phoneNo=?, "
+                params.append(new_phoneNo)
+            
+            if new_password is not None:
+                query += "password=?, "
+                params.append(new_password)
+            
+            if new_first_name is not None:
+                query += "first_name=?, "
+                params.append(new_first_name)
+            
+            if new_last_name is not None:
+                query += "last_name=?, "
+                params.append(new_last_name)
+            
+            query = query.rstrip(", ")
+            
+            query += " WHERE id=?"
+            params.append(id)
+            
+            self.cursor.execute(query, tuple(params))
             self.connection.commit()
-            return "Teacher updated successfully."
+            
+            return "Updated successfully."
+        
         except sqlite3.Error as e:
             print("Error occurred:", e)
+            return "Error occurred while updating student."
 
     def remove_teacher(self, id: int) -> str:
         try:
@@ -71,6 +101,15 @@ class TeacherDB:
             return result[0]
         else:
             return None
+        
+    def get_details(self, identifier):
+        query = "SELECT id, email, password, first_name, last_name, phoneNo FROM teachers WHERE email = ? OR id = ?"
+        self.cursor.execute(query, (identifier, identifier))
+        
+        user = self.cursor.fetchone()
+        if user:
+            return user
+        return []
 
     def close_connection(self):
         self.connection.close()
