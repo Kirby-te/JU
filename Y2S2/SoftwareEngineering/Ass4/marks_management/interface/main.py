@@ -15,8 +15,8 @@ root.geometry("500x600")
 # admin_icon = PhotoImage(file='assets/admin_icon.png')
 # register_icon = PhotoImage(file='assets/register_icon.png')
 
-# welcome_page(root)
+welcome_page(root)
 # student_dashboard(root, 2)
-teacher_dashboard(root, 7)
+# teacher_dashboard(root, 7)
 
 root.mainloop()

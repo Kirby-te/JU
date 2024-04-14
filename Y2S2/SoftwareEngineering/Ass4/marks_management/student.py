@@ -30,6 +30,13 @@ class StudentDB:
             self.cursor.execute("INSERT INTO students (password, first_name, last_name, email, phoneNo) VALUES (?, ?, ?, ?, ?)",
                                 (password, first_name, last_name, email, phoneNo))
             self.connection.commit()
+            
+            self.cursor.execute("SELECT rollNo FROM students WHERE email = ?", (email,))
+            roll_no = self.cursor.fetchone()[0]
+            
+            marks = MarkDB()
+            marks.add_student(roll_no)
+            
             return "Student added successfully.\nLogin with Email."
         except sqlite3.IntegrityError:
             return "Email already exists.\nPlease provide unique details."
@@ -198,6 +205,18 @@ class MarkDB:
         except sqlite3.Error as e:
             print("Error occurred while calculating grade:", e)
             return None
+        
+    def add_student(self, rollNo: int):
+        if (not rollNo):
+            return "One or more fields, entered are blanks."
+        try:
+            for i in range(1, 7):
+                self.cursor.execute("INSERT INTO marks (rollNo, subject_id) VALUES(?, ?)",
+                                    (rollNo, i))
+                self.connection.commit()
+            # return "Mark added successfully."
+        except sqlite3.Error as e:
+            print("Error occurred:", e)
     
     def add_mark(self, rollNo: int, subject_id: int, mark: int) -> str:
         if mark < 0 or mark > 100:
@@ -340,6 +359,8 @@ class ResultDB:
                 total_points += 2.0
             elif grade == 'F':
                 total_points += 1.0
+            else:
+                total_points += 0
 
         cumulative_gpa = total_points / total_credits
         gpa = cumulative_gpa * (10 / 7)

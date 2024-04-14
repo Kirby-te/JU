@@ -86,7 +86,7 @@ def teacher_dashboard(root: Tk, identifier: str):
             if details:                    
                 for detail in details:
                     mark = markD.get_mark(detail[0], subject_id)
-                    if not subject_id:
+                    if not mark:
                         mark = '-'
                     student_detail = [detail[0], detail[2] + " " + detail[3], mark]
                     record_table.insert(parent='', index='end', values=student_detail)
@@ -144,6 +144,8 @@ def teacher_dashboard(root: Tk, identifier: str):
             
             student_details = stud.get_details(selected_roll)
             current_mark = markD.get_mark(student_details[0], user[6])
+            if not current_mark:
+                current_mark = '-'
             
             student_card_fr = Frame(find_student_page_fr, highlightbackground='black', highlightthickness=3)
             

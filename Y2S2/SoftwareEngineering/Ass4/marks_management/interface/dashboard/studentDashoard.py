@@ -83,7 +83,11 @@ def student_dashboard(root: Tk, identifier: str):
         for i in range(1, 7):
             subject = subs.get_subject_name(i)
             mark = marks.get_mark(user[0], i)
+            if not mark:
+                mark = '-'
             grade = marks.get_grade(user[0], i)
+            if not grade:
+                grade = '-'
             
             subject_name_lb_i = Label(marks_page_fr, text=f'{subject}', font=('Bold', 15))
             subject_name_lb_i.place(x=20, y=100+gap)
