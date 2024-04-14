@@ -1,6 +1,7 @@
 from util import *
 from teacher import TeacherDB
 from college import SubjectDB
+from student import StudentDB, MarkDB
 
 bg_color_option='#c3c3c3'
 
@@ -13,6 +14,8 @@ def teacher_dashboard(root: Tk, identifier: str):
     teac.close_connection()
     sub = SubjectDB()
     subject_name = sub.get_subject_name(user[6])
+    if not subject_name:
+        subject_name = 'Subject'
     sub.close_connection()
     
     def update_user():
@@ -62,15 +65,164 @@ def teacher_dashboard(root: Tk, identifier: str):
         
         home_page_fr.pack(fill=BOTH, expand=True)
         
-    def student_page():
-        students_page_fr = Frame(pages_fr)
+        
+    def find_student_page():
+        
+        def get_student_details():
+            stud = StudentDB()
+            markD = MarkDB()
+            subject_id = user[6]
+            identifier = search_input.get()
+            
+            if find_by_option_btn.get() == 'roll':
+                details = stud.get_details_by_roll(identifier)
+            elif find_by_option_btn.get() == 'name':
+                details = stud.get_details_by_name(identifier)
+            
+            # clear privious results
+            for item in record_table.get_children():
+                record_table.delete(item)
+                
+            if details:                    
+                for detail in details:
+                    mark = markD.get_mark(detail[0], subject_id)
+                    if not subject_id:
+                        mark = '-'
+                    student_detail = [detail[0], detail[2] + " " + detail[3], mark]
+                    record_table.insert(parent='', index='end', values=student_detail)
+            
+            stud.close_connection()
+            markD.close_connection()
+
+        def generate_student_card():
+            selection = record_table.selection()
+            selected_roll = record_table.item(item=selection, option='values')[0]
+            
+            stud = StudentDB()
+            student_details = stud.get_details(selected_roll)
+            
+            student_card_fr = Frame(find_student_page_fr, highlightbackground='black', highlightthickness=3)
+            
+            heading_lb = Label(student_card_fr, text='Student Info', bg=bg_color, 
+                            fg='white', font=('Bold', 13))
+            heading_lb.place(x=0, y=0, width=344)
+            
+            back_btn = Button(student_card_fr, text='back', bg=bg_color,
+                            fg='white', font=('Bold', 15), command=student_card_fr.destroy)
+            back_btn.place(x=10, y=40)
+
+            details_lb = Label(student_card_fr,
+                            text='''Email : {}\n\nRoll No. : {}\n\nName : {}\n\nPhone No. : {}'''.format(student_details[1], student_details[0], student_details[3] + " " + student_details[4], student_details[5]),
+                            font=('Bold', 13), justify=LEFT)
+            details_lb.place(x=20, y=130)
+            
+            student_card_fr.pack(pady=10)
+            student_card_fr.pack_propagate(False)
+            student_card_fr.configure(width=400, height=400)
+            stud.close_connection()
+        
+        def edit_mark():
+            if not user[6]:
+                message_box(root, "You are not \nassociated \nwith any subject")
+                return
+            
+            stud = StudentDB()
+            markD = MarkDB()
+            
+            def update_marks():
+                new_mark = int(new_mark_input.get())
+                if not new_mark:
+                    return
+                msg = markD.update_mark(selected_roll, user[6], new_mark)
+                message_box(root, msg)
+                student_card_fr.destroy()
+                markD.close_connection()
+                get_student_details()
+            
+            selection = record_table.selection()
+            selected_roll = record_table.item(item=selection, option='values')[0]
+            
+            student_details = stud.get_details(selected_roll)
+            current_mark = markD.get_mark(student_details[0], user[6])
+            
+            student_card_fr = Frame(find_student_page_fr, highlightbackground='black', highlightthickness=3)
+            
+            heading_lb = Label(student_card_fr, text='Update Marks', bg=bg_color, 
+                            fg='white', font=('Bold', 13))
+            heading_lb.place(x=0, y=0, width=344)
+            
+            back_btn = Button(student_card_fr, text='back', bg=bg_color,
+                            fg='white', font=('Bold', 10), command=student_card_fr.destroy)
+            back_btn.place(x=10, y=40)
+
+            details_lb = Label(student_card_fr,
+                            text='''Roll No. : {}\nCurrent Score : {}'''.format(student_details[0], current_mark),
+                            font=('Bold', 13), justify=LEFT)
+            details_lb.place(x=20, y=100)
+            
+            new_mark_lb = Label(student_card_fr, text='Enter New Score', font=('Bold', 13))
+            new_mark_lb.place(x=20, y=180)
+            
+            new_mark_input = Entry(student_card_fr, font=('Bold', 13))
+            new_mark_input.place(x=20, y=210)
+            
+            submit_btn = Button(student_card_fr, text='Submit', font=('Bold', 15),
+                        bg=bg_color, fg='white', command=update_marks)
+            submit_btn.place(x=120, y=260, height=40)
+            
+            student_card_fr.pack(pady=10)
+            student_card_fr.pack_propagate(False)
+            student_card_fr.configure(width=400, height=350)
+            stud.close_connection()
+
+        def enable_buttons():
+            generate_student_card_btn.config(state=NORMAL)
+            edit_mark_btn.config(state=NORMAL)
+
+        
+        search_filters = ['roll', 'name']
+        
+        find_student_page_fr = Frame(pages_fr)
+        
+        find_student_record_lb = Label(find_student_page_fr, text='Update Student Score', font=('Bold', 13), fg="white", bg=bg_color)
+        find_student_record_lb.place(x=20, y=10, width=300)
+        
+        find_by_lb = Label(find_student_page_fr, text="Find By:", font=('Bold', 12))
+        find_by_lb.place(x=15, y=50)
+        
+        find_by_option_btn = Combobox(find_student_page_fr, font=('Bold', 12), state='readonly', values=search_filters)
+        find_by_option_btn.place(x=80, y=50, width=80)
+        find_by_option_btn.set('roll')
+        
+        search_input = Entry(find_student_page_fr, font=('Bold', 12))
+        search_input.place(x=20, y=90)
+        search_input.bind('<KeyRelease>', lambda e: get_student_details())
+        
+        record_table_lb = Label(find_student_page_fr, text='Record Table', font=('Bold', 13), bg=bg_color, fg='white')
+        record_table_lb.place(x=20, y=160, width=300)
+        
+        record_table = Treeview(find_student_page_fr)
+        record_table.place(x=0, y=200, width=350)
+        record_table.bind('<<TreeviewSelect>>', lambda e: enable_buttons())
+        
+        record_table['columns'] = ('roll', 'name', 'marks')
+        record_table.column('#0', stretch=NO, width=0)
+        
+        record_table.heading('roll', text='Roll No', anchor=W)
+        record_table.column('roll', width=35, anchor=W)
+        record_table.heading('name', text='Name', anchor=W)
+        record_table.column('name', width=85, anchor=W)
+        record_table.heading('marks', text=f'{subject_name} Marks', anchor=W)
+        record_table.column('marks', width=45, anchor=W)
+        
+        generate_student_card_btn = Button(find_student_page_fr, text='Show Student Card', font=('Bold', 13), bg=bg_color, fg='white', state=DISABLED, command=generate_student_card) 
+        generate_student_card_btn.place(x=160, y=450)
+        
+        edit_mark_btn = Button(find_student_page_fr, text='Edit Mark', font=('Bold', 13), bg=bg_color, fg='white', state=DISABLED, command=edit_mark)
+        edit_mark_btn.place(x=10, y=450)
         
         
-        students_page_lb = Label(students_page_fr, text='Details Page', font=('Bold', 15))
-        students_page_lb.place(x=100, y=200)
-        
-        
-        students_page_fr.pack(fill=BOTH, expand=True)
+        find_student_page_fr.pack(fill=BOTH, expand=True)
         
     def security_page():
         
@@ -213,8 +365,8 @@ def teacher_dashboard(root: Tk, identifier: str):
     home_btn.config(highlightbackground=bg_color, highlightthickness=1)
     home_page()
     
-    students_btn = Button(options_fr, text='Student', font=('Bold', 15), fg=bg_color, bg=bg_color_option, highlightbackground=bg_color_option, bd=0, justify=LEFT, command=lambda: on_click_option(students_btn, student_page))
-    students_btn.place(x=4, y=120)
+    find_student_btn = Button(options_fr, text='Student', font=('Bold', 15), fg=bg_color, bg=bg_color_option, highlightbackground=bg_color_option, bd=0, justify=LEFT, command=lambda: on_click_option(find_student_btn, find_student_page))
+    find_student_btn.place(x=4, y=120)
     
     security_btn = Button(options_fr, text='Security', font=('Bold', 15), fg=bg_color, bg=bg_color_option, highlightbackground=bg_color_option, bd=0, command=lambda: on_click_option(security_btn, security_page))
     security_btn.place(x=4, y=190)

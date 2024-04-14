@@ -17,6 +17,6 @@ root.geometry("500x600")
 
 # welcome_page(root)
 # student_dashboard(root, 2)
-teacher_dashboard(root, 2)
+teacher_dashboard(root, 7)
 
 root.mainloop()

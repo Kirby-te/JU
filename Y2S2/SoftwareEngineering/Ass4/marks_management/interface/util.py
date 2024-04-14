@@ -2,6 +2,7 @@ import sys
 sys.path.append("../marks_management")
 
 from tkinter import *
+from tkinter.ttk import Combobox, Treeview
 import re
 
 bg_color = '#A020F0'
