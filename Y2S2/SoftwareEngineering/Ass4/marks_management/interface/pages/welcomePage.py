@@ -6,6 +6,11 @@ from interface.pages.registrationPage import registration_page
 
 def welcome_page(root: Tk):
     
+    def reload():
+        welcome_page_fr.destroy()
+        root.update()
+        welcome_page(root)
+    
     def formard_to_admin_login():
         welcome_page_fr.destroy()
         admin_login_page(root)
@@ -40,6 +45,10 @@ def welcome_page(root: Tk):
     heading_lb = Label(welcome_page_fr, text='Login to Continue', bg=bg_color, 
                     fg='white', font=('Bold', 18))
     heading_lb.place(x=0, y=0, width=454)
+    
+    reload_btn = Button(welcome_page_fr, text='reload', bg=bg_color, 
+                    fg='white', font=('Bold', 10), command=reload)
+    reload_btn.place(x=10, y=45)
 
 
     admin_login_btn = Button(welcome_page_fr, text='Admin', bg=bg_color, 
