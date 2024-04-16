@@ -1,6 +1,8 @@
 import sqlite3
 import re
 import college
+
+#MARK: student
 class StudentDB:    
     def __init__(self, db_path = './database/students.db'):
         self.db_path = db_path
@@ -37,9 +39,9 @@ class StudentDB:
             marks = MarkDB()
             marks.add_student(roll_no)
             marks.close_connection()
-            result = ResultDB()
-            result.add_result_auto(roll_no)
-            result.close_connection()
+            # result = ResultDB()
+            # result.add_result_auto(roll_no)
+            # result.close_connection()
             
             return "Student added successfully.\nLogin with Email."
         except sqlite3.IntegrityError:
@@ -165,6 +167,7 @@ class StudentDB:
 
 
 
+#MARK: marks
 class MarkDB:
     def __init__(self, db_path='./database/students.db', college_db_path='./database/college.db', subjects_table_name='subjects', grades_table_name='grades'):
         self.db_path = db_path
@@ -291,10 +294,8 @@ class MarkDB:
         query = "SELECT grade FROM marks WHERE rollNo = ?"
         self.cursor.execute(query, (rollNo,))
         
-        grade = self.cursor.fetchall()
-        if grade:
-            return grade
-        return []
+        grades = self.cursor.fetchall()
+        return [grade[0] for grade in grades]
     
     def get_mark(self, rollNo: int, subject_id: int) -> int:
         query = "SELECT mark FROM marks WHERE rollNo = ? AND subject_id = ?"
@@ -325,7 +326,7 @@ class MarkDB:
         self.connection.close()
 
 
-
+#MARK: result
 class ResultDB:
     def __init__(self, db_path='./database/students.db', college_db_path='./database/college.db', subjects_table_name='subjects', grades_table_name='grades'):
         self.db_path = db_path
@@ -427,7 +428,40 @@ class ResultDB:
             return "Result removed successfully."
         except sqlite3.Error as e:
             print("Error occurred:", e)
-            
+    
+    # delete all records and reinsert before final publish
+    def reload_result(self):
+        try:
+            self.cursor.execute("DELETE FROM results")
+        except sqlite3.Error as e:
+            print("Error occured: ", e)
+        
+        stud = StudentDB()    
+        mark = MarkDB()
+        
+        rolls = stud.get_rolls()
+        
+        for roll in rolls:
+            grades = mark.get_grades(roll[0])
+            self.add_result(roll[0], grades)
+        
+        print("Result published successfully.")
+        return "Result published successfully."
+    
+    def get_results(self):
+        query = "SELECT * FROM results"
+        self.cursor.execute(query)
+        
+        results = self.cursor.fetchall()
+        return results
+        
+    def get_details_by_roll(self, roll: int):
+        query = f"SELECT * FROM results WHERE CAST(rollNo AS TEXT) LIKE '%{str(roll)}%' "
+        self.cursor.execute(query)
+        
+        users = self.cursor.fetchall()
+        return users
+    
     def drop_table(self):
         try:
             self.cursor.execute("DROP TABLE IF EXISTS results")
