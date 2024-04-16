@@ -3,6 +3,7 @@ from interface.pages.adminLoginPage import admin_login_page
 from interface.pages.studentLoginPage import student_login_page
 from interface.pages.teacherLoginPage import teacher_login_page
 from interface.pages.registrationPage import registration_page
+from interface.pages.displayResultPage import display_result_page
 
 def welcome_page(root: Tk):
     
@@ -35,6 +36,13 @@ def welcome_page(root: Tk):
     def formard_to_register_page():
         welcome_page_fr.destroy()
         registration_page(root)
+        root.update()
+        welcome_page(root)
+        return
+    
+    def formard_to_result_page():
+        welcome_page_fr.destroy()
+        display_result_page(root)
         root.update()
         welcome_page(root)
         return
@@ -76,6 +84,12 @@ def welcome_page(root: Tk):
                             fg='white', font=('Bold', 15), bd=0,
                             command=formard_to_register_page)
     register_login_btn.place(x=140, y=305, width=210)
+    
+    
+    view_result_btn = Button(welcome_page_fr, text='Result Board', bg=bg_color, 
+                            fg='white', font=('Bold', 15), bd=0,
+                            command=formard_to_result_page)
+    view_result_btn.place(x=140, y=365, width=210)
     
 
     welcome_page_fr.pack(pady=30)

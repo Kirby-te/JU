@@ -36,6 +36,10 @@ class StudentDB:
             
             marks = MarkDB()
             marks.add_student(roll_no)
+            marks.close_connection()
+            result = ResultDB()
+            result.add_result_auto(roll_no)
+            result.close_connection()
             
             return "Student added successfully.\nLogin with Email."
         except sqlite3.IntegrityError:
@@ -283,6 +287,15 @@ class MarkDB:
             return grade[0][0]
         return []
     
+    def get_grades(self, rollNo: int):
+        query = "SELECT grade FROM marks WHERE rollNo = ?"
+        self.cursor.execute(query, (rollNo,))
+        
+        grade = self.cursor.fetchall()
+        if grade:
+            return grade
+        return []
+    
     def get_mark(self, rollNo: int, subject_id: int) -> int:
         query = "SELECT mark FROM marks WHERE rollNo = ? AND subject_id = ?"
         self.cursor.execute(query, (rollNo, subject_id))
@@ -373,6 +386,29 @@ class ResultDB:
                 print("Student doesn't exist")
                 return "Student doesn't exist"
             stud1.close_connection()
+            
+            mark_placeholders = ', '.join(['?' for _ in range(len(grades))])
+            gpa = self.calculate_gpa(grades)
+            query = f"INSERT INTO results VALUES (?, {mark_placeholders}, ?)"
+            self.cursor.execute(query, [rollNo] + grades + [str(gpa)])
+            self.connection.commit()
+            print("Result added successfully.")
+            return "Result added successfully."
+        except sqlite3.Error as e:
+            print("Error occurred while adding result:", e)
+    
+    def add_result_auto(self, rollNo: int) -> str:
+        try:
+            stud1 = StudentDB()
+            grade1 = MarkDB()
+            if not stud1.roll_exists(rollNo):
+                print("Student doesn't exist")
+                return "Student doesn't exist"
+            stud1.close_connection()
+            
+            grades = grade1.get_grades(rollNo)
+            grades = [grade[0] for grade in grades]
+            grade1.close_connection()
             
             mark_placeholders = ', '.join(['?' for _ in range(len(grades))])
             gpa = self.calculate_gpa(grades)

@@ -1,7 +1,6 @@
 from util import *
 from teacher import TeacherDB
 from college import SubjectDB, AdminDB
-from student import StudentDB, MarkDB
 
 bg_color_option='#c3c3c3'
 
@@ -244,6 +243,64 @@ def admin_dashboard(root: Tk, identifier: str):
         
         teacher_page_fr.pack(fill=BOTH, expand=True)
     
+    
+    #MARK: result menu
+    def publish_result():
+        
+        def publish_result_status():
+            global result_published_status
+            
+            if not result_published_status:
+                if conformation_box(root, "publish result?"):
+                    result_published_status = True
+                    change_result_published_status()
+                    publish_result_fr.destroy()
+                    publish_result()
+
+        def unpublish_result_status():
+            global result_published_status
+            
+            if result_published_status:
+                if conformation_box(root, "unpublish result?"):
+                    result_published_status = False
+                    change_result_published_status()
+                    publish_result_fr.destroy()
+                    publish_result()
+
+        if result_published_status:
+            current_status = 'Published'
+        else:
+            current_status = 'Unpublished'
+            
+        publish_result_fr = Frame(pages_fr)
+        
+        publish_heading_lb = Label(publish_result_fr, text='Publish Result', font=('Bold', 13), fg="white", bg=bg_color)
+        publish_heading_lb.place(x=20, y=10, width=300)
+        
+        description_lb = Label(publish_result_fr, text='Click "Publish" to publish the result or \n"Unpublish" to unpublish it.', font=('Bold', 12))
+        description_lb.place(x=30, y=80)
+        
+        current_status_lb = Label(publish_result_fr, text=f'Current Status: {current_status}', font=('Bold', 12))
+        current_status_lb.place(x=60, y=150)
+        
+        publish_btn = Button(publish_result_fr, text='Publish', font=('Bold', 15),
+                    bg=bg_color, fg='white', command=publish_result_status)
+        publish_btn.place(x=50, y=300, height=40)
+        
+        unpublish_btn = Button(publish_result_fr, text='Unpublish', font=('Bold', 15),
+                    bg=bg_color, fg='white', command=unpublish_result_status)
+        unpublish_btn.place(x=200, y=300, height=40)
+        
+        if result_published_status:
+            publish_btn.config(state=DISABLED)
+            unpublish_btn.config(state=NORMAL)
+        else:
+            unpublish_btn.config(state=DISABLED)
+            publish_btn.config(state=NORMAL)
+        
+        publish_result_fr.pack(fill=BOTH, expand=True)
+    
+    
     #MARK: security menu
     def security_page():
         
@@ -318,7 +375,7 @@ def admin_dashboard(root: Tk, identifier: str):
         return
     
     
-    #MARK: options menu
+    #MARK: menu options
     options_fr = Frame(dashboard_fr, bg=bg_color_option, highlightbackground=bg_color, highlightthickness=3)
     
     home_btn = Button(options_fr, text='Home', font=('Bold', 15), fg=bg_color, bg=bg_color_option, highlightbackground=bg_color_option, bd=0, command=lambda: on_click_option(home_btn, home_page))
@@ -330,11 +387,14 @@ def admin_dashboard(root: Tk, identifier: str):
     find_teacher_btn = Button(options_fr, text='Teacher', font=('Bold', 15), fg=bg_color, bg=bg_color_option, highlightbackground=bg_color_option, bd=0, justify=LEFT, command=lambda: on_click_option(find_teacher_btn, teacher_page))
     find_teacher_btn.place(x=4, y=120)
     
+    publish_result_btn = Button(options_fr, text='Result', font=('Bold', 15), fg=bg_color, bg=bg_color_option, highlightbackground=bg_color_option, bd=0, justify=LEFT, command=lambda: on_click_option(publish_result_btn, publish_result))
+    publish_result_btn.place(x=4, y=190)
+    
     security_btn = Button(options_fr, text='Security', font=('Bold', 15), fg=bg_color, bg=bg_color_option, highlightbackground=bg_color_option, bd=0, command=lambda: on_click_option(security_btn, security_page))
-    security_btn.place(x=4, y=190)
+    security_btn.place(x=4, y=260)
     
     logout_btn = Button(options_fr, text='Log Out', font=('Bold', 15), fg=bg_color, bg=bg_color_option, highlightbackground=bg_color_option, bd=0, command=lambda: on_click_option(logout_btn, logout_page))
-    logout_btn.place(x=4, y=260)
+    logout_btn.place(x=4, y=330)
     
         
     options_fr.place(x=0, y=0, width=120, height=575)

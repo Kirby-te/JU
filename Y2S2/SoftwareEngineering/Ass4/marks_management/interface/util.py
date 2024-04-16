@@ -64,3 +64,11 @@ def conformation_box(root: Tk, message: str):
     
     root.wait_window(conformation_box_fr)
     return answer.get()
+
+
+# to keep tack of result status
+result_published_status = False
+    
+def change_result_published_status():
+    global result_published_status
+    result_published_status = not result_published_status
