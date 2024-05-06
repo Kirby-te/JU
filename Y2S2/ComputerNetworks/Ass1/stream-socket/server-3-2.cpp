@@ -16,7 +16,6 @@ struct ClientInfo {
 int main() {
     int server = socket(AF_INET, SOCK_STREAM, 0);
 
-    // set server to non-blocking mode
     fcntl(server, F_SETFL, O_NONBLOCK);
 
     struct sockaddr_in server_address;
@@ -48,27 +47,22 @@ int main() {
             max_fd = max(max_fd, client.socket);
         }
 
-        // perform non-blocking polling
         if (select(max_fd+1, &read_fds, nullptr, nullptr, nullptr) == -1) {
             cerr << "Error in polling" << endl;
             break;
         }
 
-        // check for new connection
         if (FD_ISSET(server, &read_fds)) {
             int new_client_socket = accept(server, nullptr, nullptr);
             if (new_client_socket != -1) {
-                // set new client to non-blockig mode
                 fcntl(new_client_socket, F_SETFL, O_NONBLOCK);
                 clients.push_back({new_client_socket, {}});
             }
         }
 
-        // check for data from existing clients
         for (auto it = clients.begin(); it != clients.end(); ) {
             auto& client = *it;
             if (FD_ISSET(client.socket, &read_fds)) {
-                // first time passing name
                 if (strlen(client.name) == 0) {
                     char client_name[1024];
                     ssize_t bytes_read = recv(client.socket, client_name, sizeof(client_name), 0);
@@ -100,7 +94,6 @@ int main() {
         }
     }
 
-    // close all client sockets
     for (const auto& client : clients) {
         close(client.socket);
     }
