@@ -1,25 +1,27 @@
 #include "sender.c"
 #include "receiver.c"
 
-int main() {
-    char data[FRAME_SIZE];
-    int counter = 10;
+void sendAndReceiveMessage(const char *message) {
+    int message_length = strlen(message);
+    int num_frames = (message_length + FRAME_SIZE - 1) / FRAME_SIZE;
+    int seq_number = 0;
 
-    for (int i=0; i<counter; i++) {
-        Frame frame;
+    for (int i = 0; i < num_frames; ++i) {
+        char frame_data[FRAME_SIZE + 1] = {0};
+        strncpy(frame_data, message + i * FRAME_SIZE, FRAME_SIZE);
 
-        waitForEvent();
+        Frame frame = makeFrame(seq_number, frame_data);
+        Frame rec_frame = sendFrame(&frame);
 
-        getData(data);
-        makeFrame(i, data, &frame);
-        sendFrame(&frame);
+        receiveFrame(&rec_frame);
 
-        waitForEvent();
-
-        receiveFrame(&frame);
-        extractData(&frame, data);
-        deliverData(data);
+        seq_number++;
     }
+}
 
+int main() {
+    char message[MSG_SIZE];
+    getData(message);
+    sendAndReceiveMessage(message);
     return 0;
 }
