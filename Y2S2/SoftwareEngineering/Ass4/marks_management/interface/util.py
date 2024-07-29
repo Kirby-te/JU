@@ -2,6 +2,7 @@ import sys
 sys.path.append("../marks_management")
 
 from tkinter import *
+from tkinter.ttk import Combobox, Treeview
 import re
 
 bg_color = '#A020F0'
@@ -63,3 +64,18 @@ def conformation_box(root: Tk, message: str):
     
     root.wait_window(conformation_box_fr)
     return answer.get()
+
+
+# to keep tack of result status
+global result_published_status
+result_published_status = False
+    
+def change_result_published_status():
+    global result_published_status
+    result_published_status = not result_published_status
+
+def published() -> bool:
+    global result_published_status
+    if result_published_status:
+        return True
+    return False

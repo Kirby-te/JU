@@ -12,31 +12,56 @@ class AdminDB:
             admins
             (
                 id INTEGER PRIMARY KEY,
-                email TEXT UNIQUE,
+                username TEXT UNIQUE,
                 password TEXT NOT NULL
             )
             """)
         self.connection.commit()
     
-    def add_admin(self, email: str, password: str) -> str:
-        if (not email) or (not password):
+    def add_admin(self, username: str, password: str) -> str:
+        if (not username) or (not password):
             return "One or more fields, entered are blanks."
         try:
-            self.cursor.execute("INSERT INTO admins (email, password) VALUES (?, ?)",
-                                (email, password))
+            self.cursor.execute("INSERT INTO admins (username, password) VALUES (?, ?)",
+                                (username, password))
             self.connection.commit()
-            return "Admin added successfully.\nLogin with Email."
+            return "Admin added successfully.\nLogin with Username."
         except sqlite3.IntegrityError:
-            return "Email already exists.\nPlease provide unique details."
+            return "Username already exists.\nPlease provide unique details."
 
-    def update_admin(self, id: int, new_email: str) -> str:
+    def update_admin(self, id: int, new_username: str = None, new_password: str = None) -> str:
         try:
-            self.cursor.execute("UPDATE admins SET email=? WHERE id=?",
-                                (new_email, id))
+            query = "UPDATE admins SET "
+            params = []
+            
+            if  new_username is not None:
+                query += "username=?, "
+                params.append(new_username)
+            
+            if new_password is not None:
+                query += "password=?, "
+                params.append(new_password)
+            
+            query = query.rstrip(", ")
+            
+            query += " WHERE id=?"
+            params.append(id)
+            
+            self.cursor.execute(query, tuple(params))
             self.connection.commit()
-            return "admin updated successfully."
+            
+            return "Updated successfully."
+        
         except sqlite3.Error as e:
             print("Error occurred:", e)
+            return "Error occurred while updating admin."
+        
+    def get_details(self, identifier):
+        query = "SELECT id, username, password FROM admins WHERE id = ? OR username = ?"
+        self.cursor.execute(query, (identifier, identifier))
+        
+        user = self.cursor.fetchone()
+        return user
 
     def remove_admin(self, id: int) -> str:
         try:
@@ -46,8 +71,8 @@ class AdminDB:
         except sqlite3.Error as e:
             print("Error occurred:", e)
             
-    def email_exists(self, email: str) -> bool:
-        self.cursor.execute("SELECT * FROM admins WHERE email=?", (email,))
+    def username_exists(self, username: str) -> bool:
+        self.cursor.execute("SELECT * FROM admins WHERE username=?", (username,))
         if self.cursor.fetchone():
             return True
         else:
@@ -61,13 +86,21 @@ class AdminDB:
             return False
         
     def get_password(self, identifier: str) -> str:
-        query = "SELECT password FROM admins WHERE email = ? OR id = ?"
+        query = "SELECT password FROM admins WHERE username = ? OR id = ?"
         self.cursor.execute(query, (identifier, identifier))
         result = self.cursor.fetchone()
         if result:
             return result[0]
         else:
             return None
+    
+    def drop_table(self):
+        try:
+            self.cursor.execute("DROP TABLE IF EXISTS admins")
+            self.connection.commit()
+            print("Table 'admins' dropped successfully.")
+        except sqlite3.Error as e:
+            print("Error occurred while dropping table 'grades':", e)
 
     def close_connection(self):
         self.connection.close()

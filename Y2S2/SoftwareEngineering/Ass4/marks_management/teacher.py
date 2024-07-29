@@ -1,3 +1,4 @@
+import re
 import sqlite3
 
 class TeacherDB:    
@@ -115,6 +116,29 @@ class TeacherDB:
         if user:
             return user
         return []
+    
+    def get_details_by_id(self, id: int):
+        query = f"SELECT id, email, first_name, last_name, phoneNo, subject_id FROM teachers WHERE CAST(id AS TEXT) LIKE '%{str(id)}%' "
+        self.cursor.execute(query)
+        
+        users = self.cursor.fetchall()
+        return users
+    
+    def get_details_by_name(self, name: str):
+        name_parts = re.split(r'\s+', name.strip())
+        
+        if len(name_parts) == 1:
+            first_name = name
+            last_name = name
+        else:
+            first_name = name_parts[0]
+            last_name = name_parts[1]
+        
+        query = f"SELECT id, email, first_name, last_name, phoneNo, subject_id FROM teachers WHERE first_name LIKE '%{first_name}%' OR last_name LIKE '%{last_name}%' "
+        self.cursor.execute(query)
+        
+        users = self.cursor.fetchall()
+        return users
     
     def drop_table(self):
         try:

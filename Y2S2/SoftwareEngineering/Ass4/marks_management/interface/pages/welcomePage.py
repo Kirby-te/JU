@@ -3,8 +3,14 @@ from interface.pages.adminLoginPage import admin_login_page
 from interface.pages.studentLoginPage import student_login_page
 from interface.pages.teacherLoginPage import teacher_login_page
 from interface.pages.registrationPage import registration_page
+from interface.pages.displayResultPage import display_result_page
 
 def welcome_page(root: Tk):
+    
+    def reload():
+        welcome_page_fr.destroy()
+        root.update()
+        welcome_page(root)
     
     def formard_to_admin_login():
         welcome_page_fr.destroy()
@@ -33,6 +39,13 @@ def welcome_page(root: Tk):
         root.update()
         welcome_page(root)
         return
+    
+    def formard_to_result_page():
+        welcome_page_fr.destroy()
+        display_result_page(root)
+        root.update()
+        welcome_page(root)
+        return
         
     welcome_page_fr = Frame(root, highlightbackground=bg_color, highlightthickness=3)
 
@@ -40,6 +53,10 @@ def welcome_page(root: Tk):
     heading_lb = Label(welcome_page_fr, text='Login to Continue', bg=bg_color, 
                     fg='white', font=('Bold', 18))
     heading_lb.place(x=0, y=0, width=454)
+    
+    reload_btn = Button(welcome_page_fr, text='reload', bg=bg_color, 
+                    fg='white', font=('Bold', 10), command=reload)
+    reload_btn.place(x=10, y=45)
 
 
     admin_login_btn = Button(welcome_page_fr, text='Admin', bg=bg_color, 
@@ -67,6 +84,12 @@ def welcome_page(root: Tk):
                             fg='white', font=('Bold', 15), bd=0,
                             command=formard_to_register_page)
     register_login_btn.place(x=140, y=305, width=210)
+    
+    
+    view_result_btn = Button(welcome_page_fr, text='Result Board', bg=bg_color, 
+                            fg='white', font=('Bold', 15), bd=0,
+                            command=formard_to_result_page)
+    view_result_btn.place(x=140, y=365, width=210)
     
 
     welcome_page_fr.pack(pady=30)

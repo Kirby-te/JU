@@ -1,5 +1,8 @@
 import sqlite3
+import re
 import college
+
+#MARK: student
 class StudentDB:    
     def __init__(self, db_path = './database/students.db'):
         self.db_path = db_path
@@ -29,6 +32,17 @@ class StudentDB:
             self.cursor.execute("INSERT INTO students (password, first_name, last_name, email, phoneNo) VALUES (?, ?, ?, ?, ?)",
                                 (password, first_name, last_name, email, phoneNo))
             self.connection.commit()
+            
+            self.cursor.execute("SELECT rollNo FROM students WHERE email = ?", (email,))
+            roll_no = self.cursor.fetchone()[0]
+            
+            marks = MarkDB()
+            marks.add_student(roll_no)
+            marks.close_connection()
+            # result = ResultDB()
+            # result.add_result_auto(roll_no)
+            # result.close_connection()
+            
             return "Student added successfully.\nLogin with Email."
         except sqlite3.IntegrityError:
             return "Email already exists.\nPlease provide unique details."
@@ -108,18 +122,14 @@ class StudentDB:
         self.cursor.execute(query, (identifier, identifier))
         
         user = self.cursor.fetchone()
-        if user:
-            return user
-        return []
+        return user
     
     def get_rolls(self):
         query = "SELECT rollNo FROM students"
         self.cursor.execute(query)
         
         users = self.cursor.fetchall()
-        if users:
-            return users
-        return []
+        return users
     
     def drop_table(self):
         try:
@@ -128,12 +138,36 @@ class StudentDB:
             print("Table 'students' dropped successfully.")
         except sqlite3.Error as e:
             print("Error occurred while dropping table 'students':", e)
+    
+    def get_details_by_roll(self, roll):
+        query = f"SELECT rollNo, email, first_name, last_name, phoneNo FROM students WHERE CAST(rollNo AS TEXT) LIKE '%{str(roll)}%' "
+        self.cursor.execute(query)
+        
+        users = self.cursor.fetchall()
+        return users
+    
+    def get_details_by_name(self, name):
+        name_parts = re.split(r'\s+', name.strip())
+        
+        if len(name_parts) == 1:
+            first_name = name
+            last_name = name
+        else:
+            first_name = name_parts[0]
+            last_name = name_parts[1]
+        
+        query = f"SELECT rollNo, email, first_name, last_name, phoneNo FROM students WHERE first_name LIKE '%{first_name}%' OR last_name LIKE '%{last_name}%' "
+        self.cursor.execute(query)
+        
+        users = self.cursor.fetchall()
+        return users
 
     def close_connection(self):
         self.connection.close()
 
 
 
+#MARK: marks
 class MarkDB:
     def __init__(self, db_path='./database/students.db', college_db_path='./database/college.db', subjects_table_name='subjects', grades_table_name='grades'):
         self.db_path = db_path
@@ -178,6 +212,18 @@ class MarkDB:
         except sqlite3.Error as e:
             print("Error occurred while calculating grade:", e)
             return None
+        
+    def add_student(self, rollNo: int):
+        if (not rollNo):
+            return "One or more fields, entered are blanks."
+        try:
+            for i in range(1, 7):
+                self.cursor.execute("INSERT INTO marks (rollNo, subject_id) VALUES(?, ?)",
+                                    (rollNo, i))
+                self.connection.commit()
+            # return "Mark added successfully."
+        except sqlite3.Error as e:
+            print("Error occurred:", e)
     
     def add_mark(self, rollNo: int, subject_id: int, mark: int) -> str:
         if mark < 0 or mark > 100:
@@ -244,6 +290,13 @@ class MarkDB:
             return grade[0][0]
         return []
     
+    def get_grades(self, rollNo: int):
+        query = "SELECT grade FROM marks WHERE rollNo = ?"
+        self.cursor.execute(query, (rollNo,))
+        
+        grades = self.cursor.fetchall()
+        return [grade[0] for grade in grades]
+    
     def get_mark(self, rollNo: int, subject_id: int) -> int:
         query = "SELECT mark FROM marks WHERE rollNo = ? AND subject_id = ?"
         self.cursor.execute(query, (rollNo, subject_id))
@@ -273,7 +326,7 @@ class MarkDB:
         self.connection.close()
 
 
-
+#MARK: result
 class ResultDB:
     def __init__(self, db_path='./database/students.db', college_db_path='./database/college.db', subjects_table_name='subjects', grades_table_name='grades'):
         self.db_path = db_path
@@ -320,6 +373,8 @@ class ResultDB:
                 total_points += 2.0
             elif grade == 'F':
                 total_points += 1.0
+            else:
+                total_points += 0
 
         cumulative_gpa = total_points / total_credits
         gpa = cumulative_gpa * (10 / 7)
@@ -342,6 +397,29 @@ class ResultDB:
             return "Result added successfully."
         except sqlite3.Error as e:
             print("Error occurred while adding result:", e)
+    
+    def add_result_auto(self, rollNo: int) -> str:
+        try:
+            stud1 = StudentDB()
+            grade1 = MarkDB()
+            if not stud1.roll_exists(rollNo):
+                print("Student doesn't exist")
+                return "Student doesn't exist"
+            stud1.close_connection()
+            
+            grades = grade1.get_grades(rollNo)
+            grades = [grade[0] for grade in grades]
+            grade1.close_connection()
+            
+            mark_placeholders = ', '.join(['?' for _ in range(len(grades))])
+            gpa = self.calculate_gpa(grades)
+            query = f"INSERT INTO results VALUES (?, {mark_placeholders}, ?)"
+            self.cursor.execute(query, [rollNo] + grades + [str(gpa)])
+            self.connection.commit()
+            print("Result added successfully.")
+            return "Result added successfully."
+        except sqlite3.Error as e:
+            print("Error occurred while adding result:", e)
             
     def remove_result(self, rollNo: int) -> str:
         try:
@@ -350,7 +428,91 @@ class ResultDB:
             return "Result removed successfully."
         except sqlite3.Error as e:
             print("Error occurred:", e)
-            
+    
+    # delete all records and reinsert before final publish
+    def reload_result(self):
+        try:
+            self.cursor.execute("DELETE FROM results")
+        except sqlite3.Error as e:
+            print("Error occured: ", e)
+        
+        stud = StudentDB()    
+        mark = MarkDB()
+        
+        rolls = stud.get_rolls()
+        
+        for roll in rolls:
+            grades = mark.get_grades(roll[0])
+            self.add_result(roll[0], grades)
+        
+        print("Result published successfully.")
+        return "Result published successfully."
+    
+    def get_results(self):
+        self.reload_result()
+        query = "SELECT * FROM results"
+        self.cursor.execute(query)
+        
+        results = self.cursor.fetchall()
+        return results
+        
+    def get_details_by_roll(self, roll: int):
+        self.reload_result()
+        query = f"SELECT * FROM results WHERE CAST(rollNo AS TEXT) LIKE '%{str(roll)}%' "
+        self.cursor.execute(query)
+        
+        users = self.cursor.fetchall()
+        return users
+    
+    def get_results_with_filter(self, column_id: str):
+        self.reload_result()
+        if column_id == "Roll":
+            query = "SELECT * FROM results"
+        elif column_id == "Total":
+            query = "SELECT * FROM results ORDER BY gpa DESC"
+        else:
+            query = f'''SELECT * FROM results ORDER BY CASE {column_id}
+                    WHEN 'S' THEN 1
+                    WHEN 'A' THEN 2
+                    WHEN 'B' THEN 3
+                    WHEN 'C' THEN 4
+                    WHEN 'D' THEN 5
+                    WHEN 'E' THEN 6
+                    WHEN 'F' THEN 7
+                    ELSE 8
+                    END
+                    '''
+        self.cursor.execute(query)
+        
+        results = self.cursor.fetchall()
+        return results
+        
+    def get_details_by_roll_with_filter(self, roll: int, column_id: str):
+        self.reload_result()
+        if column_id == "Roll":
+            query = f"SELECT * FROM results WHERE CAST(rollNo AS TEXT) LIKE '%{str(roll)}%' "
+        elif column_id == "Total":
+            query = f"SELECT * FROM results WHERE CAST(rollNo AS TEXT) LIKE '%{str(roll)}%' ORDER BY gpa DESC"
+        else:
+            query = f'''SELECT * FROM results WHERE CAST(rollNo AS TEXT) LIKE '%{str(roll)}%' ORDER BY 
+                    (CASE {column_id}
+                        WHEN 'S' THEN 1
+                        WHEN 'A' THEN 2
+                        WHEN 'B' THEN 3
+                        WHEN 'C' THEN 4
+                        WHEN 'D' THEN 5
+                        WHEN 'E' THEN 6
+                        WHEN 'F' THEN 7
+                        ELSE 8
+                    END), 
+                    gpa DESC
+                    '''
+        
+        self.cursor.execute(query)
+        
+        users = self.cursor.fetchall()
+        return users
+    
     def drop_table(self):
         try:
             self.cursor.execute("DROP TABLE IF EXISTS results")

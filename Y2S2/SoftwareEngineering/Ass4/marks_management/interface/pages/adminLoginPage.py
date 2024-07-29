@@ -1,5 +1,6 @@
 from util import *
 import college
+from interface.dashboard.adminDashboard import admin_dashboard
 
 def admin_login_page(root: Tk):
     
@@ -15,7 +16,7 @@ def admin_login_page(root: Tk):
         
         id_info = admin.id_exists(id=identifier)
         if not id_info:
-            id_info = admin.email_exists(email=identifier)
+            id_info = admin.username_exists(username=identifier)
         
         if not id_info:
             message_box(root, 'Incorrect Id')
@@ -27,7 +28,9 @@ def admin_login_page(root: Tk):
             message_box(root, 'Incorrect Password!')
             return
     
+        admin.close_connection()
         admin_login_page_fr.destroy()
+        admin_dashboard(root, identifier)
         root.update()
         # redirect
 
@@ -41,7 +44,7 @@ def admin_login_page(root: Tk):
                       fg='white', font=('Bold', 18), command=formard_to_welcome_page)
     back_btn.place(x=10, y=40)
 
-    id_number_lb = Label(admin_login_page_fr, text='Enter Id or Email', font=('Bold', 15), fg=bg_color)
+    id_number_lb = Label(admin_login_page_fr, text='Enter Id or Username', font=('Bold', 15), fg=bg_color)
     id_number_lb.place(x=100, y=140)
     id_number_ent = Entry(admin_login_page_fr, font=('Bold', 15),
                         justify=CENTER, highlightcolor=bg_color,
