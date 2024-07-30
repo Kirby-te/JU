@@ -1,5 +1,3 @@
-#!/bin/bash
-
 Name: Kaji Manirul Islam
 Roll: 0022-1100-1100
 Assignment: 1A [Familiarity with User and System level OS Commands]
