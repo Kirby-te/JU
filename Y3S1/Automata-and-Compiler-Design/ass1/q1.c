@@ -1,19 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "header.h"
+#include "stack.h"
+
 int bin_varify(char[], int);
-int get_bin_length(char[]);
-void count_ones_zeros(char[], int*, int*);
 int check_counts_equal(char[], int);
 
 int main() {
-    char bin_str[33];
-    int len, count_one = 0, count_zero = 0;
+    char bin_str[SIZE-1];
+    int len, count_one, count_zero;
 
     printf("Enter a binary string: ");
     scanf("%s", bin_str);
 
-    len = get_bin_length(bin_str);
+    len = str_length(bin_str);
 
     int check = bin_varify(bin_str, len);
     if(check) {
@@ -21,24 +22,26 @@ int main() {
         exit(0);
     }
 
-    count_ones_zeros(bin_str, &count_one, &count_zero);
+    count_one = count_chars(bin_str, '1');
+    count_zero = count_chars(bin_str, '0');
 
     printf("Number of 1's: %d\n", count_one);
     printf("Number of 0's: %d\n", count_zero);
 
-    
-
-    return 0;
-}
-
-int get_bin_length(char str[]) {
-    int len = 0;
-
-    while (str[len] != '\0') {
-        len++;
+    int equal_check = check_counts_equal(bin_str, len);
+    if (equal_check) {
+        printf("Number of 1's and 0's are equal.\n");
+    } else {
+        printf("Number of 1's and 0's aren't equal.\n");
     }
 
-    return len;
+    if (count_one%2==0 && count_zero%2==0) {
+        printf("Count of 1's and 0's are even.\n");
+    } else {
+        printf("Count of 1's and 0's aren't even.\n");
+    }
+
+    return 0;
 }
 
 int bin_varify(char str[], int len) {
@@ -51,17 +54,29 @@ int bin_varify(char str[], int len) {
     return 0;
 }
 
-void count_ones_zeros(char str[], int *count_one, int *count_zero) {
-    int i;
-    for (i = 0; str[i] != '\0'; i++) {
-        if (str[i] == '1') {
-            (*count_one)++;
-        } else if (str[i] == '0') {
-            (*count_zero)++;
-        }
-    }
-}
-
 int check_counts_equal(char str[], int len) {
-    
+    if (len == 0) {
+        return 0;
+    }
+
+    struct Stack *s = createStack();
+    int idx = 0;
+    char flag = str[idx];
+
+    push(s, str[idx++]);
+
+    while (idx < len) {
+        char ch = str[idx];
+        if (ch == flag) {
+            push(s, ch);
+        } else {
+            pop(s);
+        }
+        idx++;
+    }
+
+    int result = isEmpty(s);
+    freeStack(s);
+    free(s);
+    return result;
 }
