@@ -5,7 +5,7 @@
 #include "stack.h"
 
 int str_varify(char[], int);// alphabatic string
-int check_counts_equal(char[], char, char, int);
+int check_counts_equal(char[], int, char, char);
 
 int main() {
     char str[SIZE-1];
@@ -29,7 +29,7 @@ int main() {
     printf("Number of %c's: %d\n", char1, count_char1);
     printf("Number of %c's: %d\n", char2, count_char2);
 
-    int equal_check = check_counts_equal(str, char1, char2, len);
+    int equal_check = check_counts_equal(str, len, char1, char2);
     if (equal_check) {
         printf("Number of %c's and %c's are equal.\n", char1, char2);
     } else {
@@ -53,32 +53,32 @@ int str_varify(char str[], int len) {
     return 0;
 }
 
-int check_counts_equal(char str[], char char1, char char2, int len) {
+int check_counts_equal(char str[], int len, char char1, char char2) {
     if (len == 0) {
         return 0;
     }
 
     struct Stack *s = createStack();
     int idx = 0;
-    char flag;
+
+    // If char1 is encountered, push it onto the stack.
+    //If char2 is encountered, pop from the stack.
+    char push_char = char1, pop_char = char2;
 
     while (idx < len) {
         char ch = str[idx];
-        if (ch == char1 || ch == char2) {
-            flag = ch;
+        if (ch == push_char) {
             push(s, ch);
-            idx++;
-            break;
-        }
-        idx++;
-    }
-
-    while (idx < len) {
-        char ch = str[idx];
-        if (ch == flag) {
-            push(s, ch);
-        } else if (ch == char1 || ch == char2){
-            pop(s);
+        } else if (ch == pop_char) {
+            if (!isEmpty(s)) {
+                pop(s);
+            } else {
+                // If stack is empty, interchange char 1 & 2
+                char temp = push_char;
+                push_char = pop_char;
+                pop_char = temp;
+                push(s, ch);
+            }
         }
         idx++;
     }
