@@ -61,16 +61,22 @@ int check_counts_equal(char str[], int len) {
 
     struct Stack *s = createStack();
     int idx = 0;
-    char flag = str[idx];
 
-    push(s, str[idx++]);
+    // If 0 is encountered, push it onto the stack.
+    //If 1 is encountered, pop from the stack.
+    char push_char = '0';
 
     while (idx < len) {
         char ch = str[idx];
-        if (ch == flag) {
+        if (ch == push_char) {
             push(s, ch);
         } else {
-            pop(s);
+            if (!isEmpty(s)) {
+                pop(s);
+            } else {
+                // If stack is empty, interchange the rules for 0 & 1
+                push_char = (push_char == '0') ? '1' : '0';
+            }
         }
         idx++;
     }

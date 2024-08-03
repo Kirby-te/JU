@@ -1,9 +1,13 @@
+/******************************
+
 Name: Kaji Manirul Islam
 Roll: 0022-1100-1100
-Assignment: 1A [Familiarity with User and System level OS Commands]
-Date: 29.07.2024
 
-# ........
+Assignment: 1A [Familiarity with User and System level OS Commands]
+
+Date: 29.07.2024
+*******************************/
+
 
 Q1. who
  <Answer >
@@ -186,14 +190,72 @@ Can be used to change between terminals in a virtual environment.
 
 # ........
 
-Q18. unname
+Q18. uname
  < Answer >
 It prints system information.
- < Syntax >
-
+'-a'(all) prints all available system info
  < Output >
 
 # ........
+
+Q19. umask
+ < Answer >
+- It specifies user file creation mask, implying which of the 3 permissions are to be denied 
+to the different classes of users (owner, group and others).
+- The bits which are set in the umask value, refer to the permissions, which are not assigned 
+by default, as these values are subtracted from the maximum permission for files/directories.
+- File -> The full permission set is 666 (read/write permission for all)
+- Directory -> The full permission set is 777 (read/write/execute)
+- The three -rwx- permissions (Read-Write-Execute) values are converted into three-bit binary values and 
+represented by a single octal value.
+- 0 (no permission), 1 (execute), 2 (write), 3 (write and execute), 
+4 (read), 5 (read and execute), 6 (read and write), 7 (permission to do all three)
+- The permissions will be calculated as (full permissions) – (umask value)
+ < Output >
+0022
+
 # ........
+
+Q20. find
+ < Answer >
+It searches for files in a directory hierarchy
+ < Syntax >
+$find [path] [expression]
+-name <file_name> : searches for all files with this name
+-type [f|d]: finds all files or directories 
+
+# ........
+
+Q21. sort
+ < Answer >
+It sorts the lines of text files
+-r: reverse order
+-n: numerically
+ < Output >
+
+# ........
+
+Q22. ps
+ < Answer >
+It displays information about the current processes.
+ < Output >
+
+# ........
+
+Q23. chmod 777 file1
+ < Answer >
+Gives full permission to owner, group and others
+Use '$ls -l file1' to check
+ < Output >
+
+# ........
+
+Q24. chmod o-w file1
+ < Answer >
+Removes write permission for 'o' ie. others.
+owner (u), group (g), others (o)
+Use '$ls -l file1' to check
+ < Output >
+
 # ........
 
