@@ -1,7 +1,7 @@
 /******************************
 
-Name: Kaji Manirul Islam
-Roll: 0022-1100-1100
+Name: 
+Roll: 
 
 Assignment: 1A [Familiarity with User and System level OS Commands]
 
@@ -47,7 +47,7 @@ Q2. whoami
  < Answer for Q2 >
 It displays current User name, Terminal number, date and time at which user logged into the system.
  < Output for Q2>
-be22100
+be22---
 
 # ........
 
@@ -55,7 +55,7 @@ Q3. pwd
  < Answer >
 It displays the currnet working directory
  < Output >
-/home/usr/student/ug/yr22/be22100/OS_LAB/assignment-1A
+/home/usr/student/ug/yr22/be22---/OS_LAB/assignment-1A
 
 # ........
 
