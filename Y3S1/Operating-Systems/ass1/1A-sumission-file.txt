@@ -1,9 +1,13 @@
+/******************************
+
 Name: Kaji Manirul Islam
 Roll: 0022-1100-1100
-Assignment: 1A [Familiarity with User and System level OS Commands]
-Date: 29.07.2024
 
-# ........
+Assignment: 1A [Familiarity with User and System level OS Commands]
+
+Date: 29.07.2024
+*******************************/
+
 
 Q1. who
  <Answer >
@@ -253,8 +257,5 @@ owner (u), group (g), others (o)
 Use '$ls -l file1' to check
  < Output >
 
-# ........
-
-# ........
 # ........
 
