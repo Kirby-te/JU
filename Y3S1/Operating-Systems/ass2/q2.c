@@ -35,7 +35,7 @@
 #include <string.h>
 #include <sys/wait.h>
 #include <sys/types.h>
-#include <time.h>
+#include <sys/time.h>
 
 void write_fifo(const char*, const char*);
 void read_fifo(const char*, const char*);
@@ -54,6 +54,11 @@ int main(int argc, char **argv) {
     const char *output_file1 = "output_file1";
     const char *output_file2 = "output_file2";
     double time_spent_step1, time_spent_step2;
+    struct timeval start, end;
+
+    // Removes link if already exists
+    unlink(fifo1);
+    unlink(fifo2);
 
     // creat FIFOs
     if (mkfifo(fifo1, 0666) == -1 || mkfifo(fifo2, 0666) == -1) {
@@ -77,34 +82,66 @@ int main(int argc, char **argv) {
         }
     }
 
+    /*
+     * pid values from diffent prospective
+     *           Parent      Proc1       Proc2 
+     * Parent      0           x           y   
+     * Proc1:      z           0           0
+     * Proc2:      z           x           0   
+    */
+
+    // In process 1
+    if (proc1 == 0) {
+        // Assigning a +ve value to proc2
+        proc2 = 1;
+    }
+
+    // Parent Process
     if (proc1 != 0 && proc2 != 0) {
         printf("Created processes with Pid-%d & Pid-%d\n", proc1, proc2);
-        printf("\nStep 1\n");
-    } else {
-        sleep(2);
+        printf("\nStep 1 & 2\n");
+        // Start the Clock
+        gettimeofday(&start, NULL);
     }
+    /*
+    // Child Processes
+    else {
+        // Preparing the resources
+        sleep(0.5);
+    }
+    */
+
 
     // Step 1
     if (proc1 == 0) {
         // process 1 writes into FIFO
         write_fifo(fifo1, argv[1]);
-        sleep(1);
     } else if(proc2 == 0) {
         // Processes 2 reads form FIFO
         read_fifo(fifo1, output_file2);
+        // Giving Proc1 time to Prep for Step 2 
+        // waitpid(proc1, &status, 0);
     } else {
         // Wait for processes to finish in Parent
         waitpid(proc1, &status, 0);
         waitpid(proc2, &status, 0);
+        // Stop the clock
+        // gettimeofday(&end, NULL);
+        // time_spent_step1 = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6;
+
+        // Start the clock for Step 2
+        // gettimeofday(&start, NULL);
     }
 
-
-    // Step 2
+    /*
+    // Step 2 Prep
     if (proc1 == 0) {
         printf("\nStep 2\n");
     }
+    */
+
+    // Step 2
     if (proc2 == 0) {
-        sleep(2);
         // process 2 writes into FIFO
         write_fifo(fifo2, argv[1]);
     }
@@ -115,20 +152,26 @@ int main(int argc, char **argv) {
         // Wait for processes to finish in Parent
         waitpid(proc1, &status, 0);
         waitpid(proc2, &status, 0);
+        // Stop the clock
+        gettimeofday(&end, NULL);
+        time_spent_step2 = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6;
     }
 
-    // Step 3
+    // Step 3 - Parent Process
     if (proc1 != 0 && proc2 != 0) {
         printf("\nStep 3: Compare generated files\n");
 
         int check_flag = compare_files(output_file1, output_file2);
         if (check_flag == 0) {
-            printf("Files are same\n");
+            printf("Files are identical\n");
         } else if (check_flag == 1){
-            printf("Files aren't same\n");
+            printf("Files aren't identical\n");
         } else {
             printf("Error: File Comparison.\n");
         }
+
+        // Get time for double tranfer
+        printf("\nTime required for double tranfer = %f seconds\n", (time_spent_step1 + time_spent_step2));
     }
 
     unlink(fifo1);
@@ -143,14 +186,16 @@ void write_fifo(const char *fifo, const char *filename) {
     int fd;
     char line[200];
 
-    if ((fp = fopen(filename, "r")) == NULL) {
+    fp = fopen(filename, "r");
+    if (fp == NULL) {
         perror("Failed to open file for reading");
         exit(EXIT_FAILURE);
     }
     
     printf("Pid-%d: waiting for reader...\n", pid);
     
-    if ((fd = open(fifo, O_WRONLY)) < 0) {
+    fd = open(fifo, O_WRONLY);
+    if (fd < 0) {
         perror("Failed to open FIFO for writing");
         fclose(fp);
         exit(EXIT_FAILURE);
@@ -179,14 +224,16 @@ void read_fifo(const char *fifo, const char *output_file) {
     ssize_t num;
     char buffer[300];
 
-    if ((fp = fopen(output_file, "w")) == NULL) {
+    fp = fopen(output_file, "w");
+    if (fp == NULL) {
         perror("Failed to open file for writing");
         exit(EXIT_FAILURE);
     }
     
     printf("Pid-%d: waiting for writer...\n", pid);
 
-    if ((fd = open(fifo, O_RDONLY)) < 0)  {
+    fd = open(fifo, O_RDONLY);
+    if (fd < 0)  {
         perror("Failed to open FIFO for reading");
         fclose(fp);
         exit(EXIT_FAILURE);
@@ -213,20 +260,29 @@ int compare_files(const char *file1, const char *file2) {
     FILE *f1 = fopen(file1, "r");
     FILE *f2 = fopen(file2, "r");
 
-    if (!f1 || !f2) {
-        perror("Compare: Couldn't open file(s)");
+    if (!f1) {
+        perror("Compare: Couldn't open file1");
+        return -1;
+    }
+    if (!f2) {
+        perror("Compare: Couldn't open file2");
+        fclose(f1);
         return -1;
     }
 
     char ch1, ch2;
-    while ((ch1 = fgetc(f1)) != EOF && (ch2 = fgetc(f2)) != EOF) {
+    // Match one character at a time
+    while (ch1 != EOF && ch2 != EOF) {
         if (ch1 != ch2) {
             fclose(f1);
             fclose(f2);
             return 1;
         }
+        ch1 = fgetc(f1);
+        ch2 = fgetc(f2);
     }
 
+    // One file ended prematurly
     if ((ch1 != EOF) || (ch2 != EOF)) {
         printf("%c + %c", ch1, ch2);
         fclose(f1);

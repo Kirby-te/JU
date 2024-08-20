@@ -12,7 +12,12 @@ Catch the signal ‘SIGINT’ and display “Ha Ha, Not Stopping”. Use ‘sign
 
 B. IPC using Named Pipe (FIFO)					(6 Marks) [CO5]
 
-Create two processes, named Proc1 and Proc2. Transfer 1GB file from Proc1 to Proc2 using a FIFO. Now, transfer the same file from Proc2 to Proc1 using another FIFO. Now, compare the two files to make sure that the same file has returned back. Also, print the time required to do this double transfer. Attach this output to the source file as a comment.
+Create two processes, named Proc1 and Proc2.
+Transfer 1GB file from Proc1 to Proc2 using a FIFO.
+Now, transfer the same file from Proc2 to Proc1 using another FIFO.
+Now, compare the two files to make sure that the same file has returned back.
+Also, print the time required to do this double transfer. 
+Attach this output to the source file as a comment.
 
 To create FIFO, you can either use shell command or system call.
 
