@@ -144,10 +144,12 @@ int main(int argc, char **argv) {
     if (proc2 == 0) {
         // process 2 writes into FIFO
         write_fifo(fifo2, argv[1]);
+        exit(EXIT_SUCCESS);
     }
     else if(proc1 == 0) {
         // Processes 1 reads form FIFO
         read_fifo(fifo2, output_file1);
+        exit(EXIT_SUCCESS);
     } else {
         // Wait for processes to finish in Parent
         waitpid(proc1, &status, 0);
