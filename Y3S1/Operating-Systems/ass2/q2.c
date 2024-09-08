@@ -1,6 +1,6 @@
 /***********************************************************************
- * Team Number: 
- * Member: 
+ * Name: 
+ * Roll: 
  * 
  * Date: 05.08.2024
  *
@@ -11,16 +11,16 @@
  *      Step 3: Comapre output-1 & output-2
  * 
  *
- * Input Description: File Name (size = 1GB)
+ * Input Description: File Name
  *
  * Output Description: Comments related with process creation and execution + File Comaprision (true/false) + Time Required for Double Transfer 
  *
  *
- * Compilation Command:
- * Execution Sequence:
+ * Compilation Command: gcc q2.c
+ * Execution Sequence: ./a.out <file_name>
  *
  *
- * Sample Input:
+ * Sample Input: very-large-file
  * Sample Output:
  /-----------------------------------
 
@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
     const char *fifo2 = "Mr. Mime";
     const char *output_file1 = "output_file1";
     const char *output_file2 = "output_file2";
-    double time_spent_step1, time_spent_step2;
+    double time_spent;
     struct timeval start, end;
 
     // Removes link if already exists
@@ -65,6 +65,9 @@ int main(int argc, char **argv) {
         perror("mkfifo");
         exit(EXIT_FAILURE);
     }
+
+    // Start the Clock
+    gettimeofday(&start, NULL);
 
     // creating process 1
     proc1 = fork();
@@ -100,16 +103,7 @@ int main(int argc, char **argv) {
     if (proc1 != 0 && proc2 != 0) {
         printf("Created processes with Pid-%d & Pid-%d\n", proc1, proc2);
         printf("\nStep 1 & 2\n");
-        // Start the Clock
-        gettimeofday(&start, NULL);
     }
-    /*
-    // Child Processes
-    else {
-        // Preparing the resources
-        sleep(0.5);
-    }
-    */
 
 
     // Step 1
@@ -119,26 +113,8 @@ int main(int argc, char **argv) {
     } else if(proc2 == 0) {
         // Processes 2 reads form FIFO
         read_fifo(fifo1, output_file2);
-        // Giving Proc1 time to Prep for Step 2 
-        // waitpid(proc1, &status, 0);
-    } else {
-        // Wait for processes to finish in Parent
-        waitpid(proc1, &status, 0);
-        waitpid(proc2, &status, 0);
-        // Stop the clock
-        // gettimeofday(&end, NULL);
-        // time_spent_step1 = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6;
-
-        // Start the clock for Step 2
-        // gettimeofday(&start, NULL);
     }
 
-    /*
-    // Step 2 Prep
-    if (proc1 == 0) {
-        printf("\nStep 2\n");
-    }
-    */
 
     // Step 2
     if (proc2 == 0) {
@@ -156,12 +132,15 @@ int main(int argc, char **argv) {
         waitpid(proc2, &status, 0);
         // Stop the clock
         gettimeofday(&end, NULL);
-        time_spent_step2 = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6;
+        time_spent = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6;
+
+        // Get time for double transfer
+        printf("\nTime required for double tranfer = %f seconds\n", (time_spent));
     }
 
     // Step 3 - Parent Process
     if (proc1 != 0 && proc2 != 0) {
-        printf("\nStep 3: Compare generated files\n");
+        printf("\nCompare generated files\n");
 
         int check_flag = compare_files(output_file1, output_file2);
         if (check_flag == 0) {
@@ -171,9 +150,6 @@ int main(int argc, char **argv) {
         } else {
             printf("Error: File Comparison.\n");
         }
-
-        // Get time for double tranfer
-        printf("\nTime required for double tranfer = %f seconds\n", (time_spent_step1 + time_spent_step2));
     }
 
     unlink(fifo1);
@@ -210,7 +186,6 @@ void write_fifo(const char *fifo, const char *filename) {
             perror("Failed to write into FIFO");
             exit(EXIT_FAILURE);
         }
-        // printf("Pid-%d: wrote %d bytes\n", pid, num);
     }
 
     close(fd);
@@ -244,7 +219,6 @@ void read_fifo(const char *fifo, const char *output_file) {
     printf("Pid-%d: got a writer\n", pid);
 
     while ((num = read(fd, buffer, sizeof(buffer))) > 0) {
-        // printf("Pid-%d: read %ld bytes\n", pid, num);
         fwrite(buffer, 1, num, fp);
     }
 

@@ -1,7 +1,7 @@
 /***********************************************************************
  *
- * Team Number: 
- * Member: 
+ * Name: 
+ * Roll: 
  * 
  * Date:
  *
@@ -22,16 +22,23 @@
  *     Step 5: Print file transfer time
  *
  *
- * Input Description:
+ * Input Description: Source file
  *
- * Output Description:
- *
- *
- * Compilation Command:
- * Execution Sequence:
+ * Output Description: Socket and Transfer details, Transfer time, Output Files comparision result
  *
  *
- * Sample Input:
+ * Compilation Command: gcc q.c
+ * Execution Sequence: ./a.out <file_name>
+ *
+ * 
+ * Socket Info: $ ss -x | (head -n 1 && grep "unix_socket.sock")
+ /-----------------------------------
+Netid State Recv-Q Send-Q                                    Local Address:Port    Peer Address:Port   Process
+u_str ESTAB 0      94464                                  unix_socket.sock 1340980            * 1340979
+ -----------------------------------/
+ *
+ *
+ * Sample Input: very-large-file
  * Sample Output:
  /-----------------------------------
 
@@ -44,20 +51,21 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <sys/wait.h>
-#include <time.h>
+#include <sys/time.h>
 
-#define SOCKET_PATH "unix_socket"
+#define SOCKET_PATH "unix_socket.sock"
 #define BUFFER_SIZE 1024
+#define BYTES_IN_KB 1024
 #define BYTES_IN_MB 1024 * 1024
-#define CHECK_BYTE_TRANSFER 200 * 1024 * 1024
+#define BYTE_CHECK_TRANSFER_FLAG 2
 
-void error_exit(const char*);                               // Prints the specified error message to stderr and terminates the program
-void create_server(int *, struct sockaddr_un *);             // Creates a UNIX domain socket, binds it to the specified file path, and prepares it to listen for incoming connections
-int create_client(struct sockaddr_un);                       // Creates a UNIX domain socket and connects it to the server using the provided address
-int accept_connection(int, struct sockaddr_un);              // Waits for a client to connect to the server, accepts the connection, and provides a new file descriptor
-void send_file(int, const char *);                           // Reads from specified file and sends it to the connected socket. Then, the write end of the socket is shut down
-void receive_file(int, const char *);                        // Receives data from connected socket and writes it to a specified file. Then, the read end of the socket is shut down
-int compare_files(const char *, const char *);              // Reads two files byte by byte and compares them. Returns 0 if identical, or 1 if not
+void error_exit(const char*);                                   // Prints the specified error message to stderr and terminates the program
+void create_server(int *, struct sockaddr_un *);                // Creates a UNIX domain socket, binds it to the specified file path, and prepares it to listen for incoming connections
+int create_client(struct sockaddr_un);                          // Creates a UNIX domain socket and connects it to the server using the provided address
+int accept_connection(int, struct sockaddr_un);                 // Waits for a client to connect to the server, accepts the connection, and provides a new file descriptor
+void send_file(int, const char *);                              // Reads from specified file and sends it to the connected socket. Then, the write end of the socket is shut down
+void receive_file(int, const char *);                           // Receives data from connected socket and writes it to a specified file. Then, the read end of the socket is shut down
+int compare_files(const char *, const char *);                  // Reads two files byte by byte and compares them. Returns 0 if identical, or 1 if not
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
@@ -70,7 +78,7 @@ int main(int argc, char *argv[]) {
     pid_t child;
     const char *output_file1 = "output_file1";
     const char *output_file2 = "output_file2";
-    clock_t start, end;
+    struct timeval start, end;
     double time_taken;
     
     int status = 0;
@@ -84,7 +92,7 @@ int main(int argc, char *argv[]) {
     close(server_fd);
 
     // Starting the clock
-    start = clock();
+    gettimeofday(&start, NULL);
 
     // Create child process
     if ((child = fork()) < 0) {
@@ -116,13 +124,13 @@ int main(int argc, char *argv[]) {
     }
 
     // Stopping clock after double transfer
-    end = clock();
-    time_taken = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("[+]Time taken for double transfer: %f\n", time_taken);
+    gettimeofday(&end, NULL);
+    time_taken = (end.tv_sec - start.tv_sec) + (end.tv_usec - start.tv_usec) / 1e6;
+    printf("\n[+]Time taken for double transfer: %f\n", time_taken);
 
     // Step 4 - Parent Process
     if (child > 0) {
-        printf("[+]Comparing files...\n");
+        printf("\n[+]Comparing files...\n");
 
         if (compare_files(output_file1, output_file2) == 0) {
             printf("[+]Files are identical\n");
@@ -217,6 +225,8 @@ void send_file(int fd, const char *filename) {
     char buffer[BUFFER_SIZE];
     size_t bytes_read;
     long total_bytes_sent = 0;
+    long byte_checker = BYTES_IN_MB * BYTE_CHECK_TRANSFER_FLAG;
+    int flag_counter = 0;
 
     printf("[+]Pid-%d: Sending file\n", pid);
 
@@ -225,16 +235,19 @@ void send_file(int fd, const char *filename) {
             error_exit("[-]Failed to send file data");
         }
 
+        /*
         // 
         total_bytes_sent += bytes_read;
-        if (total_bytes_sent % (BYTES_IN_MB * CHECK_BYTE_TRANSFER) == 0) {
-            printf("[+]Pid-%d: 200 MB sent\n", pid);
+        if (total_bytes_sent % byte_checker == 0) {
+            flag_counter++;
+            printf("[+]Pid-%d: %d MB sent, counter: %d\n", pid, BYTE_CHECK_TRANSFER_FLAG, flag_counter);
         }
+        */
     }
 
     printf("[+]Pid-%d: File sent\n", pid);
 
-    //  Disables write for this socket
+    // Disables write for this socket
     shutdown(fd, SHUT_WR);
 
     fclose(file);
@@ -250,17 +263,23 @@ void receive_file(int fd, const char *output_filename) {
     char buffer[BUFFER_SIZE];
     ssize_t bytes_received;
     long total_bytes_received = 0;
+    long byte_checker = BYTES_IN_MB * BYTE_CHECK_TRANSFER_FLAG;
+    int flag_counter = 0;
 
     printf("[+]Pid-%d: Receiving file\n", pid);
 
     while ((bytes_received = recv(fd, buffer, BUFFER_SIZE, 0)) > 0) {
         // printf("%s\n", buffer);
         fwrite(buffer, 1, bytes_received, file);
- 
+        
+        /*
+        //
         total_bytes_received += bytes_received;
-        if (total_bytes_received % (BYTES_IN_MB * CHECK_BYTE_TRANSFER) == 0) {
-            printf("[+]Pid-%d: 200 MB received\n", pid);
+        if (total_bytes_received % byte_checker == 0) {
+            flag_counter++;
+            printf("[+]Pid-%d: %d MB received, counter: %d\n", pid, BYTE_CHECK_TRANSFER_FLAG, flag_counter);
         }
+        */
     }
 
     if (bytes_received < 0) {
