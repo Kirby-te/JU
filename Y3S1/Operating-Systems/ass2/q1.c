@@ -1,6 +1,6 @@
 /***********************************************************************
- * Team Number: 
- * Member: 
+ * Name: 
+ * Roll: 
  * 
  * Date: 05.08.2024
  *
@@ -8,19 +8,30 @@
  *       [Catch the signal ‘SIGINT’ and display “Ha Ha, Not Stopping”. 
  *        Use ‘signal’ system call. Always use “perror” to check the return status of a library/system call.]
  *
- * Input Description:
+ * Input Description: None
  *
- * Output Description:
- *
- *
- * Compilation Command:
- * Execution Sequence:
+ * Output Description: Program Comments
  *
  *
- * Sample Input:
+ * Compilation Command: gcc q1.c
+ * Execution Sequence: ./a.out
+ *
+ *
+ * Sample Input: None
  * Sample Output:
  /-----------------------------------
-
+Somebody stop me
+Somebody stop me
+Somebody stop me
+Somebody stop me
+^CHa Ha, Not Stopping
+Somebody stop me
+Somebody stop me
+Somebody stop me
+^CHa Ha, Not Stopping
+Somebody stop me
+^Z
+[1]+  Stopped                 ./a.out
  -----------------------------------/
 ***********************************************************************/
 
@@ -39,7 +50,7 @@ int main(int argc, char **argv) {
 
     while (1) {
         printf("Somebody stop me\n");
-        sleep(2);
+        sleep(1);
     }
 
     return 0;
