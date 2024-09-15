@@ -22,14 +22,16 @@ while true; do
         exit 1
     fi
 
-    # print header after every 15 lines 
+    CURRENT_TIME=$(date +%H:%M:%S)
+
+    # print header after every interval 
     if [ "$COUNTER" -ge "$COUNTER_INTERVAL" ]; then
-        echo -e "\n\n pid \t minor_fault \t major_fault"
+        echo -e "\n\n time \t\t state \t minor_fault \t\t major_fault \t virtual_memory_size \t resident_set_size"
         COUNTER=0                   # reset after printing header
     fi
 
     # extract and print minor and major page faults
-    stat=$(awk '{print $1, "\t\t", $10, "\t\t", $12}' /proc/$PID/stat)
+    stat=$(awk -v curr_time="$CURRENT_TIME" '{print curr_time, "\t", $3, "\t\t", $10, "\t\t", $12, "\t\t", $23, "\t\t", $24}' /proc/$PID/stat)
     echo -e "$stat"
 
     # increment the counter
